@@ -25,3 +25,6 @@ Route::get('/dashboard', function () {
 
 // CRUD Resident
 Route::resource('residents', ResidentsController::class);
+Route::get('residents/{resident}/pdf', [ResidentsController::class, 'downloadPdf'])->name('residents.pdf');
+Route::post('/residents/import', [ResidentsController::class, 'import'])->name('residents.import');
+

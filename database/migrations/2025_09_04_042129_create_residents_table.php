@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('residents', function (Blueprint $table) {
             $table->id();
-            $table->string('no_kk')->unique(); // Nomor Kartu Keluarga
+            $table->string('no_kk'); // Nomor Kartu Keluarga
             $table->string('nama_kepala_keluarga');
             $table->string('alamat')->nullable();
             $table->string('status_kepemilikan_rumah')->nullable();
@@ -30,7 +30,9 @@ return new class extends Migration
             $table->string('fasilitas_bab')->nullable();
             $table->string('jenis_kloset')->nullable();
             $table->string('pembuangan_tinja')->nullable();
-            $table->string('kepemilikan_aset')->nullable();
+            $table->string('asset_bergerak')->nullable();
+            $table->string('asset_tidak_bergerak')->nullable();
+            $table->string('ternak')->nullable();
             $table->string('pendapatan')->nullable();
 
             // Koordinat rumah

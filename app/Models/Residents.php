@@ -25,8 +25,12 @@ class Residents extends Model
         'fasilitas_bab',
         'jenis_kloset',
         'pembuangan_tinja',
-        'kepemilikan_aset',
-        'longitude',
+        'asset_bergerak',
+        'asset_tidak_bergerak',
+        'ternak',
+        'pendapatan',
         'latitude',
+        'longitude',
     ];
+
 }

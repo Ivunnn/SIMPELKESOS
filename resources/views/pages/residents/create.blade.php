@@ -142,19 +142,24 @@
                         </select>
                     </div>
 
-                    <div class="form-group mb-3">
-                        <label for="kepemilikan_aset">Kepemilikan Aset</label>
-                        <select class="form-control" name="kepemilikan_aset">
-                            <option value="Aset Bergerak">Aset Bergerak</option>
-                            <option value="Aset Tidak Bergerak">Aset Tidak Bergerak</option>
-                            <option value="Aset Ternak">Aset Ternak</option>
-                        </select>
+                     <div class="form-group mb-3">
+                        <label for="asset_bergerak">Asset bergerak</label>
+                        <textarea class="form-control" id="asset_bergerak" name="asset_bergerak">{{ old('asset_bergerak') }}</textarea>
+                    </div>
+
+                     <div class="form-group mb-3">
+                        <label for="asset_tidak_bergerak">Asset tidak bergerak</label>
+                        <textarea class="form-control" id="asset_tidak_bergerak" name="asset_tidak_bergerak">{{ old('asset_tidak_bergerak') }}</textarea>
+                    </div>
+                    
+                     <div class="form-group mb-3">
+                        <label for="ternak">Ternak</label>
+                        <textarea class="form-control" id="ternak" name="ternak">{{ old('ternak') }}</textarea>
                     </div>
 
                     <div class="form-group mb-3">
                         <label for="pendapatan">Pendapatan per-kapita/bulan</label>
-                        <label for="kepemilikan_aset">Kepemilikan Aset</label>
-                        <select class="form-control" name="kepemilikan_aset">
+                        <select class="form-control" name="pendapatan">
                             <option value="<800.000">Kurang dari Rp.800.000</option>
                             <option value="800.000 - 1,2jt">Rp.800.000 - Rp.1,2jt</option>
                             <option value="1,2jt - 1,8jt">Rp.1,2jt - Rp.1,8jt</option>

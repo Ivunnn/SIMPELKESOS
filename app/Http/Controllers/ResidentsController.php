@@ -2,21 +2,27 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Resident;
 use App\Models\Residents;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\ResidentsImport;
 
 class ResidentsController extends Controller
 {
     /**
      * Display a listing of the residents.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $residents = Residents::latest()->paginate(10);
-        return view('pages.residents.index', compact('residents')); // ✅ benar
-    }
+        // Pagination 10 data per halaman
+        $residents = Residents::orderBy('created_at', 'desc')->paginate(10);
 
+        // pastikan pagination link bawa query string (misal pencarian nanti)
+        $residents->withQueryString();
+
+        return view('pages.residents.index', compact('residents'));
+    }
 
     /**
      * Show the form for creating a new resident.
@@ -31,10 +37,14 @@ class ResidentsController extends Controller
      */
     public function store(Request $request)
     {
-        // validasi & simpan
+        $request->validate([
+            'no_kk' => 'required|unique:residents,no_kk',
+            'nama_kepala_keluarga' => 'required|string|max:255',
+        ]);
+
         Residents::create($request->all());
 
-        return redirect()->route('residents.index') // ✅ gunakan 'residents.index'
+        return redirect()->route('residents.index')
             ->with('success', 'Data penduduk berhasil ditambahkan.');
     }
 
@@ -43,7 +53,7 @@ class ResidentsController extends Controller
      */
     public function show(Residents $resident)
     {
-        return view('residents.show', compact('resident'));
+        return view('pages.residents.show', compact('resident'));
     }
 
     /**
@@ -51,7 +61,6 @@ class ResidentsController extends Controller
      */
     public function edit(Residents $resident)
     {
-        $resident = Residents::findOrFail($resident->id);
         return view('pages.residents.edit', compact('resident'));
     }
 
@@ -80,5 +89,31 @@ class ResidentsController extends Controller
 
         return redirect()->route('residents.index')
             ->with('success', 'Data penduduk berhasil dihapus.');
+    }
+
+    /**
+     * Download detail resident as PDF.
+     */
+    public function downloadPdf(Residents $resident)
+    {
+        $pdf = Pdf::loadView('pages.residents.pdf', compact('resident'))
+            ->setPaper('a4', 'portrait');
+
+        return $pdf->download('resident-' . $resident->id . '.pdf');
+    }
+
+    /**
+     * Import data from Excel/CSV.
+     */
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,csv,xls'
+        ]);
+
+        Excel::import(new ResidentsImport, $request->file('file'));
+
+        return redirect()->route('residents.index')
+            ->with('success', 'Data penduduk berhasil diimport.');
     }
 }
