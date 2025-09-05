@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\ResidentsImport;
+use App\Models\FamilyMember;
 
 class ResidentsController extends Controller
 {
@@ -61,8 +62,11 @@ class ResidentsController extends Controller
      */
     public function show(Residents $resident)
     {
+        $resident->load('familyMembers'); // eager loading
+
         return view('pages.residents.show', compact('resident'));
     }
+
 
     /**
      * Show the form for editing the specified resident.
@@ -124,4 +128,6 @@ class ResidentsController extends Controller
         return redirect()->route('residents.index')
             ->with('success', 'Data penduduk berhasil diimport.');
     }
+
+
 }

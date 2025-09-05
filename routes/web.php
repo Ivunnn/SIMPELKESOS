@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MapController;
 use App\Http\Controllers\ResidentsController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\FamilyMemberController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,9 +17,9 @@ use App\Http\Controllers\ResidentsController;
 */
 
 // Halaman utama (opsional, bisa redirect ke dashboard)
-Route::get('/', function () {
-    return view('welcome');
-});
+
+Route::get('/', [AuthController::class, 'login']);
+Route::post('/', [AuthController::class, 'authenticate']);
 
 // Dashboard (misalnya setelah login)
 Route::get('/dashboard', function () {
@@ -32,5 +34,12 @@ Route::post('/residents/import', [ResidentsController::class, 'import'])->name('
 //Map
 Route::get('/map', [MapController::class, 'index'])->name('map.index');
 Route::get('/map/residents', [MapController::class, 'getResidents'])->name('map.residents');
+
+Route::resource('residents', ResidentsController::class);
+
+// nested route untuk anggota keluarga
+Route::post('residents/{resident}/family-members', [FamilyMemberController::class, 'store'])->name('family-members.store');
+Route::delete('residents/{resident}/family-members/{familyMember}', [FamilyMemberController::class, 'destroy'])->name('family-members.destroy');
+
 
 

@@ -16,7 +16,7 @@ class MapController extends Controller
     // API data marker
     public function getResidents()
     {
-        $residents = Residents::select('id', 'nama_kepala_keluarga', 'alamat', 'latitude', 'longitude')->get();
+        $residents = Residents::select('id', 'nama_kepala_keluarga', 'alamat','pendapatan', 'latitude', 'longitude')->get();
 
         return response()->json($residents);
     }

@@ -20,8 +20,8 @@
 
                         <div class="form-group mb-3">
                             <label for="no_nik_kepala_keluarga">NIK Kepala Keluarga</label>
-                            <input type="text" class="form-control" id="no_nik_kepala_keluarga" name="no_nik_kepala_keluarga" value="{{ old('no_nik_kepala_keluarga') }}"
-                                required>
+                            <input type="text" class="form-control" id="no_nik_kepala_keluarga"
+                                name="no_nik_kepala_keluarga" value="{{ old('no_nik_kepala_keluarga') }}" required>
                         </div>
 
 
@@ -175,13 +175,14 @@
                         <div class="form-group mb-3">
                             <label for="pendapatan">Pendapatan per-kapita/bulan</label>
                             <select class="form-control" name="pendapatan">
-                                <option value="<800.000">Kurang dari Rp.800.000</option>
-                                <option value="800.000 - 1,2jt">Rp.800.000 - Rp.1,2jt</option>
-                                <option value="1,2jt - 1,8jt">Rp.1,2jt - Rp.1,8jt</option>
-                                <option value="1,8jt - 2,4jt">Rp.1,8jt - Rp.2,4jt</option>
-                                <option value=">2,4jt">Lebih dari Rp.2,4jt</option>
+                                <option value="<800.000">Kurang dari Rp.800.000 (Desil 1)</option>
+                                <option value="800.000 - 1,2jt">Rp.800.000 - Rp.1,2jt (Desil 2)</option>
+                                <option value="1,2jt - 1,8jt">Rp.1,2jt - Rp.1,8jt (Desil 3)</option>
+                                <option value="1,8jt - 2,4jt">Rp.1,8jt - Rp.2,4jt (Desil 4)</option>
+                                <option value=">2,4jt">Lebih dari Rp.2,4jt (Desil 5)</option>
                             </select>
                         </div>
+
 
                         <div class="form-group mb-3">
                             <label for="foto_rumah">Foto Rumah (Tampak Depan/Atas)</label>

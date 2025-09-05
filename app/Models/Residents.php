@@ -11,7 +11,9 @@ class Residents extends Model
 
     protected $fillable = [
         'no_kk',
+        'no_nik_kepala_keluarga',
         'nama_kepala_keluarga',
+        'usaha',
         'alamat',
         'status_kepemilikan_rumah',
         'jumlah_keluarga',
@@ -29,8 +31,17 @@ class Residents extends Model
         'asset_tidak_bergerak',
         'ternak',
         'pendapatan',
+        'foto_rumah',
+        'foto_tampak_dalam',
+        'foto_kamar_mandi',
         'latitude',
         'longitude',
     ];
+
+    public function familyMembers()
+    {
+        return $this->hasMany(FamilyMember::class, 'resident_id');
+    }
+
 
 }
