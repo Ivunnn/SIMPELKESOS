@@ -37,16 +37,24 @@ class ResidentsController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'no_kk' => 'required|unique:residents,no_kk',
-            'nama_kepala_keluarga' => 'required|string|max:255',
-        ]);
+        $data = $request->all();
 
-        Residents::create($request->all());
+        // Upload foto jika ada
+        if ($request->hasFile('foto_rumah')) {
+            $data['foto_rumah'] = $request->file('foto_rumah')->store('uploads/residents', 'public');
+        }
+        if ($request->hasFile('foto_tampak_dalam')) {
+            $data['foto_tampak_dalam'] = $request->file('foto_tampak_dalam')->store('uploads/residents', 'public');
+        }
+        if ($request->hasFile('foto_kamar_mandi')) {
+            $data['foto_kamar_mandi'] = $request->file('foto_kamar_mandi')->store('uploads/residents', 'public');
+        }
 
-        return redirect()->route('residents.index')
-            ->with('success', 'Data penduduk berhasil ditambahkan.');
+        Residents::create($data);
+
+        return redirect()->route('residents.index')->with('success', 'Data penduduk berhasil ditambahkan.');
     }
+
 
     /**
      * Display the specified resident.

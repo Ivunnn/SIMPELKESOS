@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -13,12 +12,14 @@ return new class extends Migration
     {
         Schema::create('residents', function (Blueprint $table) {
             $table->id();
-            $table->string('no_kk'); // Nomor Kartu Keluarga
+            $table->string('no_kk') -> unique();
+            $table->string('no_nik_kepala_keluarga') -> unique();
             $table->string('nama_kepala_keluarga');
             $table->string('alamat')->nullable();
             $table->string('status_kepemilikan_rumah')->nullable();
-            
+
             // Pilihan disimpan sebagai string
+            $table->string('usaha')->nullable();
             $table->integer('jumlah_keluarga')->nullable();
             $table->string('jenis_lantai')->nullable();
             $table->string('jenis_dinding')->nullable();
@@ -34,6 +35,9 @@ return new class extends Migration
             $table->string('asset_tidak_bergerak')->nullable();
             $table->string('ternak')->nullable();
             $table->string('pendapatan')->nullable();
+            $table->string('foto_rumah')->nullable();
+            $table->string('foto_tampak_dalam')->nullable();
+            $table->string('foto_kamar_mandi')->nullable();
 
             // Koordinat rumah
             $table->decimal('longitude', 11, 8)->nullable();
