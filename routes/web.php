@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\MapController;
 use App\Http\Controllers\ResidentsController;
 
 /*
@@ -27,4 +28,9 @@ Route::get('/dashboard', function () {
 Route::resource('residents', ResidentsController::class);
 Route::get('residents/{resident}/pdf', [ResidentsController::class, 'downloadPdf'])->name('residents.pdf');
 Route::post('/residents/import', [ResidentsController::class, 'import'])->name('residents.import');
+
+//Map
+Route::get('/map', [MapController::class, 'index'])->name('map.index');
+Route::get('/map/residents', [MapController::class, 'getResidents'])->name('map.residents');
+
 

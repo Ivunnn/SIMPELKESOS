@@ -37,8 +37,8 @@
     <!-- Divider -->
     <hr class="sidebar-divider d-none d-md-block">
 
-    <li class="nav-item {{request()->is('peta*') ? 'active' : ''}}">
-        <a class="nav-link" href="/peta">
+    <li class="nav-item {{request()->is('map*') ? 'active' : ''}}">
+        <a class="nav-link" href="/map">
             <i class="fas fa-fw fa-map"></i>
             <span>Peta</span></a>
     </li>
