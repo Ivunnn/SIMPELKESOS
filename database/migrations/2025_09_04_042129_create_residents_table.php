@@ -13,7 +13,7 @@ return new class extends Migration {
         Schema::create('residents', function (Blueprint $table) {
             $table->id();
             $table->string('no_kk') -> unique();
-            $table->string('no_nik_kepala_keluarga') -> unique();
+            $table->string('no_nik_kepala_keluarga')->nullable()->unique();
             $table->string('nama_kepala_keluarga');
             $table->string('alamat')->nullable();
             $table->string('status_kepemilikan_rumah')->nullable();

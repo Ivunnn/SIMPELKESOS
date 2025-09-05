@@ -2,13 +2,25 @@
 @extends('layouts.app')
 
 @section('content')
-    <div id="map" style="height: 900px;"></div>
+    <div class="mb-3">
+        <label for="filterPendapatan" class="form-label">Filter Pendapatan per-kapita/bulan</label>
+        <select id="filterPendapatan" class="form-control" style="max-width:400px;">
+            <option value="all">Semua</option>
+            <option value="<800.000">Kurang dari Rp.800.000 (Desil 1)</option>
+            <option value="800.000 - 1,2jt">Rp.800.000 - Rp.1,2jt (Desil 2)</option>
+            <option value="1,2jt - 1,8jt">Rp.1,2jt - Rp.1,8jt (Desil 3)</option>
+            <option value="1,8jt - 2,4jt">Rp.1,8jt - Rp.2,4jt (Desil 4)</option>
+            <option value=">2,4jt">Lebih dari Rp.2,4jt (Desil 5)</option>
+        </select>
+    </div>
+
+    <div id="map" style="height: 800px;"></div>
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
     <script>
-        var map = L.map('map').setView([-7.5102683, 112.4173366], 12);
+        var map = L.map('map').setView([-7.5102683, 112.4173366], 13);
 
         // Basemap
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -36,44 +48,68 @@
                 map.fitBounds(geoLayer.getBounds());
             });
 
-        // Helper kategori warna (sesuai value <select>)
+        // Helper kategori warna
         function getColorByPendapatan(pendapatan) {
             switch (pendapatan) {
                 case "<800.000": return "red";           // Desil 1
                 case "800.000 - 1,2jt": return "orange"; // Desil 2
-                case "1,2jt - 1,8jt": return "#FFD580";  // Desil 3 (orange muda)
+                case "1,2jt - 1,8jt": return "#FFD580";  // Desil 3
                 case "1,8jt - 2,4jt": return "yellow";   // Desil 4
                 case ">2,4jt": return "blue";            // Desil 5
-                default: return "gray";                  // fallback kalau kosong
+                default: return "gray";                  // fallback
             }
         }
+
+        let allResidents = [];    // simpan data semua residents
+        let markerLayer = L.layerGroup().addTo(map); // layer marker supaya gampang di-clear
 
         // Load markers dari database residents
         fetch("{{ route('map.residents') }}")
             .then(res => res.json())
             .then(data => {
-                data.forEach(resident => {
-                    if (resident.latitude && resident.longitude) {
+                allResidents = data; // simpan semua data
+                renderMarkers("all"); // render awal semua marker
+            });
+
+        // Fungsi render marker sesuai filter
+        function renderMarkers(filterValue) {
+            markerLayer.clearLayers(); // hapus semua marker dulu
+
+            allResidents.forEach(resident => {
+                if (resident.latitude && resident.longitude) {
+                    if (filterValue === "all" || resident.pendapatan === filterValue) {
                         let color = getColorByPendapatan(resident.pendapatan);
 
-                        L.circleMarker([resident.latitude, resident.longitude], {
+                        let marker = L.circleMarker([resident.latitude, resident.longitude], {
                             radius: 10,
                             fillColor: color,
                             color: "#000",
                             weight: 1,
                             opacity: 1,
                             fillOpacity: 0.8
-                        })
-                            .addTo(map)
-                            .bindPopup(`
-                                    <b>${resident.nama_kepala_keluarga}</b><br>
-                                    Pendapatan: ${resident.pendapatan}<br>
-                                    ${resident.alamat}<br>
-                                    <a href="/residents/${resident.id}" class="btn text-white btn-sm btn-primary mt-2">Detail</a>
-                                `);
+                        }).bindPopup(`
+                            <div style="min-width:220px">
+                                <h6 style="margin:0; font-weight:bold;">${resident.nama_kepala_keluarga}</h6>
+                                <medium><b>Alamat:</b> ${resident.alamat}</medium><br>
+                                <medium><b>Pendapatan:</b> ${resident.pendapatan}</medium><br>
+                                <a href="/residents/${resident.id}" 
+                                   class="btn btn-primary btn-sm mt-2 text-white"
+                                   style="padding:4px 8px; font-size:12px;">
+                                    Detail
+                                </a>
+                            </div>
+                        `);
+
+                        markerLayer.addLayer(marker);
                     }
-                });
+                }
             });
+        }
+
+        // Event filter dropdown
+        document.getElementById("filterPendapatan").addEventListener("change", function () {
+            renderMarkers(this.value);
+        });
 
         // Tambahkan legenda kategori desil
         var legend = L.control({ position: 'bottomright' });
@@ -83,8 +119,8 @@
             div.style.padding = '10px';
             div.style.border = '2px solid #ccc';
             div.style.borderRadius = '8px';
-            div.style.fontSize = '14px';  // ukuran teks lebih besar
-            div.style.lineHeight = '20px';
+            div.style.fontSize = '14px';
+            div.style.lineHeight = '22px';
 
             var categories = [
                 { label: "Kurang dari Rp.800.000 (Desil 1)", color: "red" },
@@ -97,11 +133,10 @@
             categories.forEach(cat => {
                 div.innerHTML +=
                     `<i style="background:${cat.color}; width:20px; height:20px; display:inline-block; margin-right:8px; border:1px solid #000;"></i> 
-                 <span style="font-weight:500;">${cat.label}</span><br>`;
+                     <span style="font-weight:500;">${cat.label}</span><br>`;
             });
             return div;
         };
         legend.addTo(map);
-
     </script>
 @endsection
