@@ -17,18 +17,22 @@
 <body class="bg-gradient-primary">
 
     <div class="container">
-
         <!-- Outer Row -->
         <div class="row justify-content-center">
-
             <div class="col-md-6 ">
-
                 <div class="card o-hidden border-0 shadow-lg my-5">
                     <div class="card-body p-4">
                         <div class="text-center mb-4">
                             <h1 class="h4 text-gray-900 fw-extrabold">Login SIMPELKESOS</h1>
                             <p class="text-muted">Silakan masuk untuk melanjutkan</p>
                         </div>
+
+                        {{-- Alert error kalau login gagal --}}
+                        @if($errors->has('loginError'))
+                            <div class="alert alert-danger">
+                                {{ $errors->first('loginError') }}
+                            </div>
+                        @endif
 
                         {{-- Form Login --}}
                         <form method="POST" action="{{ route('login.post') }}">
@@ -46,13 +50,23 @@
                             </button>
                         </form>
 
+
+                        {{-- SweetAlert Error --}}
+                        @if($errors->has('loginError'))
+                            <script>
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Login Gagal',
+                                    text: '{{ $errors->first('loginError') }}',
+                                    confirmButtonColor: '#3085d6',
+                                    confirmButtonText: 'Coba Lagi'
+                                });
+                            </script>
+                        @endif
                     </div>
                 </div>
-
             </div>
-
         </div>
-
     </div>
 
     <!-- Bootstrap core JavaScript-->
@@ -61,6 +75,8 @@
     <script src="{{ asset('template/vendor/jquery-easing/jquery.easing.min.js') }}"></script>
     <script src="{{ asset('template/js/sb-admin-2.min.js') }}"></script>
 
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
 
 </html>
