@@ -16,14 +16,21 @@ class ResidentsController extends Controller
      */
     public function index(Request $request)
     {
-        // Pagination 10 data per halaman
-        $residents = Residents::orderBy('created_at', 'desc')->paginate(10);
+        $query = Residents::query();
 
-        // pastikan pagination link bawa query string (misal pencarian nanti)
-        $residents->withQueryString();
+        // Jika ada pencarian berdasarkan no_kk
+        if ($request->has('search') && $request->search != '') {
+            $query->where('no_kk', 'like', '%' . $request->search . '%');
+        }
+
+        $residents = $query->orderBy('created_at', 'desc')->paginate(10);
+
+        // Biar pagination tetap bawa query pencarian
+        $residents->appends($request->only('search'));
 
         return view('pages.residents.index', compact('residents'));
     }
+
 
     /**
      * Show the form for creating a new resident.

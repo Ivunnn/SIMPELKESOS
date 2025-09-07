@@ -3,6 +3,15 @@
 
 @section('content')
     <div class="mb-3">
+        <h1 class="mb-4 fw-bold">Peta Daerah Jampirogo</h1>
+
+        {{-- Search by Nomor KK --}}
+        <div class="d-flex mb-3" style="gap:10px; max-width:500px;">
+            <input type="text" id="searchKK" class="form-control" placeholder="Cari Nomor KK...">
+            <button id="btnSearchKK" class="btn btn-primary">Cari</button>
+            <button id="btnResetKK" class="btn btn-secondary">Reset</button>
+        </div>
+
         <label for="filterPendapatan" class="form-label">Filter Pendapatan per-kapita/bulan</label>
         <select id="filterPendapatan" class="form-control" style="max-width:400px;">
             <option value="all">Semua</option>
@@ -14,7 +23,7 @@
         </select>
     </div>
 
-    <div id="map" style="height: 800px;"></div>
+    <div id="map" style="height: 680px;"></div>
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
@@ -60,20 +69,30 @@
             }
         }
 
-        let allResidents = [];    // simpan data semua residents
-        let markerLayer = L.layerGroup().addTo(map); // layer marker supaya gampang di-clear
+        let allResidents = [];
+        let markerLayer = L.layerGroup().addTo(map);
 
-        // Load markers dari database residents
-        fetch("{{ route('map.residents') }}")
-            .then(res => res.json())
-            .then(data => {
-                allResidents = data; // simpan semua data
-                renderMarkers("all"); // render awal semua marker
-            });
+        // Fungsi load data dari server
+        function loadResidents(noKK = '') {
+            let url = "{{ route('map.residents') }}";
+            if (noKK) {
+                url += `?no_kk=${encodeURIComponent(noKK)}`;
+            }
 
-        // Fungsi render marker sesuai filter
+            fetch(url)
+                .then(res => res.json())
+                .then(data => {
+                    allResidents = data;
+                    renderMarkers("all"); // default render semua (nanti tetap bisa filter pendapatan)
+                });
+        }
+
+        // Render awal
+        loadResidents();
+
+        // Fungsi render marker sesuai filter pendapatan
         function renderMarkers(filterValue) {
-            markerLayer.clearLayers(); // hapus semua marker dulu
+            markerLayer.clearLayers();
 
             allResidents.forEach(resident => {
                 if (resident.latitude && resident.longitude) {
@@ -90,6 +109,7 @@
                         }).bindPopup(`
                             <div style="min-width:220px">
                                 <h6 style="margin:0; font-weight:bold;">${resident.nama_kepala_keluarga}</h6>
+                                <medium><b>No. KK:</b> ${resident.no_kk || '-'}</medium><br>
                                 <medium><b>Alamat:</b> ${resident.alamat}</medium><br>
                                 <medium><b>Pendapatan:</b> ${resident.pendapatan}</medium><br>
                                 <a href="/residents/${resident.id}" 
@@ -106,9 +126,28 @@
             });
         }
 
-        // Event filter dropdown
+        // Event filter pendapatan
         document.getElementById("filterPendapatan").addEventListener("change", function () {
             renderMarkers(this.value);
+        });
+
+        // Event search by Nomor KK
+        document.getElementById("btnSearchKK").addEventListener("click", function () {
+            let kk = document.getElementById("searchKK").value;
+            loadResidents(kk);
+        });
+
+        // Event reset search
+        document.getElementById("btnResetKK").addEventListener("click", function () {
+            document.getElementById("searchKK").value = '';
+            loadResidents();
+        });
+
+        // Event tekan Enter di input search
+        document.getElementById("searchKK").addEventListener("keyup", function (e) {
+            if (e.key === "Enter") {
+                loadResidents(this.value);
+            }
         });
 
         // Tambahkan legenda kategori desil
@@ -133,10 +172,11 @@
             categories.forEach(cat => {
                 div.innerHTML +=
                     `<i style="background:${cat.color}; width:20px; height:20px; display:inline-block; margin-right:8px; border:1px solid #000;"></i> 
-                     <span style="font-weight:500;">${cat.label}</span><br>`;
+                         <span style="font-weight:500;">${cat.label}</span><br>`;
             });
             return div;
         };
         legend.addTo(map);
     </script>
+    >
 @endsection

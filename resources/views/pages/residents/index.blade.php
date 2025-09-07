@@ -3,6 +3,22 @@
 @section('content')
     <div class="d-sm-flex align-items-center justify-content-between mb-3">
         <h1 class="h3 mb-0 text-gray-800">Data Penduduk</h1>
+    </div>
+    <div class="d-sm-flex align-items-center justify-content-between mb-3">
+        <form action="{{ route('residents.index') }}" method="GET" class="d-flex" style="gap:10px;">
+            <input type="text" name="search" class="form-control form-control-sm" placeholder="Cari No. KK..."
+                value="{{ request('search') }}">
+
+            <button type="submit" class="btn btn-sm btn-primary">
+                <i class="fas fa-search"></i> Cari
+            </button>
+
+            @if(request('search'))
+                <a href="{{ route('residents.index') }}" class="btn btn-sm btn-secondary">
+                    <i class="fas fa-times"></i> Reset
+                </a>
+            @endif
+        </form>
 
         {{-- Import --}}
         <form action="{{ route('residents.import') }}" method="POST" enctype="multipart/form-data"
@@ -20,6 +36,7 @@
             <i class="fas fa-plus fa-sm text-white-50"></i> Input Penduduk
         </a>
     </div>
+
 
     <div class="row">
         <div class="col">

@@ -10,14 +10,19 @@ class MapController extends Controller
     // Halaman peta
     public function index()
     {
-        return view('pages.map.index'); 
+        return view('pages.map.index');
     }
 
     // API data marker
-    public function getResidents()
+    public function getResidents(Request $request)
     {
-        $residents = Residents::select('id', 'nama_kepala_keluarga', 'alamat','pendapatan', 'latitude', 'longitude')->get();
+        $query = Residents::select('id', 'no_kk', 'nama_kepala_keluarga', 'alamat', 'pendapatan', 'latitude', 'longitude');
 
-        return response()->json($residents);
+        if ($request->has('no_kk') && $request->no_kk != '') {
+            $query->where('no_kk', 'like', '%' . $request->no_kk . '%');
+        }
+
+        return response()->json($query->get());
     }
+
 }
