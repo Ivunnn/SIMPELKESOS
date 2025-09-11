@@ -4,31 +4,35 @@
     <div class="d-sm-flex align-items-center justify-content-between mb-3">
         <h1 class="h3 mb-0 text-gray-800">Data Penduduk</h1>
     </div>
-    <div class="d-sm-flex align-items-center justify-content-between mb-3">
-        <form action="{{ route('residents.index') }}" method="GET" class="d-flex" style="gap:10px;">
-            <input type="text" name="search" class="form-control form-control-sm" placeholder="Cari No. KK..."
-                value="{{ request('search') }}">
+    {{-- Row untuk search dan import --}}
+    <div class="row mb-3 g-2">
+        <div class="col-12 col-md-6">
+            <form action="{{ route('residents.index') }}" method="GET" class="d-flex flex-wrap gap-2">
+                <input type="text" name="search" class="form-control form-control-sm flex-grow-1"
+                    placeholder="Cari No. KK..." value="{{ request('search') }}">
 
-            <button type="submit" class="btn btn-sm btn-primary">
-                <i class="fas fa-search"></i> Cari
-            </button>
+                <button type="submit" class="btn btn-sm btn-primary mt-3">
+                    <i class="fas fa-search"></i> Cari
+                </button>
 
-            @if(request('search'))
-                <a href="{{ route('residents.index') }}" class="btn btn-sm btn-secondary">
-                    <i class="fas fa-times"></i> Reset
-                </a>
-            @endif
-        </form>
+                @if(request('search'))
+                    <a href="{{ route('residents.index') }}" class="btn btn-sm btn-secondary">
+                        <i class="fas fa-times"></i> Reset
+                    </a>
+                @endif
+            </form>
+        </div>
 
-        {{-- Import --}}
-        <form action="{{ route('residents.import') }}" method="POST" enctype="multipart/form-data"
-            class="d-flex align-items-center gap-2">
-            @csrf
-            <input type="file" name="file" required class="form-control form-control-sm w-auto">
-            <button type="submit" class="btn btn-success btn-sm shadow-sm">
-                <i class="fas fa-file-import"></i> Import Data
-            </button>
-        </form>
+        <div class="col-12 col-md-6">
+            <form action="{{ route('residents.import') }}" method="POST" enctype="multipart/form-data"
+                class="d-flex flex-wrap align-items-center gap-2">
+                @csrf
+                <input type="file" name="file" required class="form-control form-control-sm flex-grow-1">
+                <button type="submit" class="btn btn-success btn-sm shadow-sm mt-3">
+                    <i class="fas fa-file-import"></i> Import Data
+                </button>
+            </form>
+        </div>
     </div>
 
     <div class="mb-4">
@@ -65,7 +69,8 @@
                                 @foreach ($residents as $resident)
                                     <tr>
                                         {{-- Nomor tetap urut sesuai halaman --}}
-                                        <td>{{ ($residents->currentPage() - 1) * $residents->perPage() + $loop->iteration }}</td>
+                                        <td>{{ ($residents->currentPage() - 1) * $residents->perPage() + $loop->iteration }}
+                                        </td>
                                         <td>{{ $resident->no_kk }}</td>
                                         <td>{{ $resident->nama_kepala_keluarga }}</td>
                                         <td>{{ $resident->alamat }}</td>

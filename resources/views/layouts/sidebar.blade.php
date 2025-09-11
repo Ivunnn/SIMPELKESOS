@@ -1,10 +1,8 @@
-<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion sidebar-sticky" id="accordionSidebar">
 
     <!-- Sidebar - Brand -->
     <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/dashboard">
-        <div class="sidebar-brand-icon rotate-n-15">
-            {{-- <i class="fas fa-laugh-wink"></i> --}}
-        </div>
+        <div class="sidebar-brand-icon rotate-n-15"></div>
         <div class="sidebar-brand-text mx-3">SIMPELKESOS Jampirogo</div>
     </a>
 
@@ -12,35 +10,38 @@
     <hr class="sidebar-divider my-0">
 
     <!-- Nav Item - Dashboard -->
-    <li class="nav-item {{request()->is('dashboard') ? 'active' : ''}}">
+    <li class="nav-item {{ request()->is('dashboard') ? 'active' : '' }}">
         <a class="nav-link" href="/dashboard">
             <i class="fas fa-fw fa-tachometer-alt"></i>
-            <span>Dashboard</span></a>
+            <span>Dashboard</span>
+        </a>
     </li>
 
     <!-- Divider -->
     <hr class="sidebar-divider">
-    <!-- Nav Item - Tables -->
 
-    <li class="nav-item {{request()->is('residents*') ? 'active' : ''}}">
+    <li class="nav-item {{ request()->is('residents*') ? 'active' : '' }}">
         <a class="nav-link" href="/residents">
             <i class="fas fa-fw fa-table"></i>
-            <span>Penduduk</span></a>
+            <span>Penduduk</span>
+        </a>
     </li>
 
-
-    <li class="nav-item {{request()->is('map*') ? 'active' : ''}}">
+    <li class="nav-item {{ request()->is('map*') ? 'active' : '' }}">
         <a class="nav-link" href="/map">
             <i class="fas fa-fw fa-map"></i>
-            <span>Peta</span></a>
+            <span>Peta</span>
+        </a>
     </li>
 
-    <li class="nav-item {{request()->is('akun*') ? 'active' : ''}}">
+    <li class="nav-item {{ request()->is('akun*') ? 'active' : '' }}">
         <a class="nav-link" href="/account">
             <i class="fas fa-fw fa-user"></i>
-            <span>Akun</span></a>
+            <span>Akun</span>
+        </a>
     </li>
-    <!-- Sidebar Toggler (Sidebar) -->
+
+    <!-- Sidebar Toggler -->
     <div class="text-center d-none d-md-inline">
         <button class="rounded-circle border-0" id="sidebarToggle"></button>
     </div>
