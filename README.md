@@ -1,7 +1,7 @@
-# 🏡 SIMPELKESOS Jampirogo  
+# 🏡 SIMPELKESOS
 
-Aplikasi **Sistem Informasi Pendataan & Pemetaan Kesejahteraan Sosial (SIMPELKESOS)** berbasis web.  
-Dibangun menggunakan **Laravel 10**, aplikasi ini membantu perangkat desa dalam:  
+Aplikasi **Sistem Informasi Pemetaan Layanan Kesejahteraan Sosial (SIMPELKESOS)** berbasis web.  
+Dibangun menggunakan **Laravel 12**, aplikasi ini membantu perangkat desa dalam:  
 - Pendataan penduduk  
 - Pemetaan kondisi sosial ekonomi  
 - Analisis kesejahteraan berbasis desil pendapatan  
@@ -36,6 +36,22 @@ Dibangun menggunakan **Laravel 10**, aplikasi ini membantu perangkat desa dalam:
   - Lihat informasi akun
   - Update profil
   - Ubah password
+
+---
+
+## 📷 Screenshots
+
+### Dashboard
+![Dashboard](public/screenshots/dashboard.png)
+
+### Data Penduduk
+![Data Penduduk](public/screenshots/penduduk.png)
+
+### Peta Desa
+![Peta Desa](public/screenshots/peta.png)
+
+### Akun Pengguna
+![Akun Pengguna](public/screenshots/akun.png)
 
 ---
 

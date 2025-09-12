@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="container-fluid">
-        <h1 class="mb-4 fw-bold">Dashboard SIMPELKESOS - Jampirogo</h1>
+        <h1 class="mb-4 fw-bold">Dashboard SIMPELKESOS</h1>
 
         {{-- Row atas: Total Penduduk --}}
         <div class="row mb-4">

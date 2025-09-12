@@ -3,7 +3,7 @@
 
 @section('content')
     <div class="mb-3">
-        <h1 class="mb-4 fw-bold">Peta Daerah Jampirogo</h1>
+        <h1 class="mb-4 fw-bold">Peta Layanan Kesejahteraan Sosial</h1>
 
         {{-- Search by Nomor KK --}}
         <div class="d-flex mb-3" style="gap:10px; max-width:500px;">
