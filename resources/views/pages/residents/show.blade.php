@@ -37,6 +37,14 @@
                             <td>{{ $resident->alamat }}</td>
                         </tr>
                         <tr>
+                            <th>Kelurahan/Desa</th>
+                            <td>{{ $resident->kelurahan }}</td>
+                        </tr>
+                        <tr>
+                            <th>Kecamatan</th>
+                            <td>{{ $resident->kecamatan }}</td>
+                        </tr>
+                        <tr>
                             <th>Status Kepemilikan Rumah</th>
                             <td>{{ $resident->status_kepemilikan_rumah }}</td>
                         </tr>

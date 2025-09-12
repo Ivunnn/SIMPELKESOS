@@ -40,7 +40,7 @@
         <tr><th>Latitude</th><td>{{ $resident->latitude }}</td></tr>
         <tr><th>Longitude</th><td>{{ $resident->longitude }}</td></tr>
         <tr>
-            <th>Foto Rumah</th>
+            <th>Foto Rumah Tampak Depan</th>
             <td>
                 @if($resident->foto_rumah)
                     <img src="{{ public_path('storage/' . $resident->foto_rumah) }}" alt="Foto Rumah">

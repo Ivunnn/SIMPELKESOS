@@ -12,8 +12,9 @@
             <button id="btnResetKK" class="btn btn-secondary">Reset</button>
         </div>
 
+        {{-- Filter pendapatan --}}
         <label for="filterPendapatan" class="form-label">Filter Pendapatan per-kapita/bulan</label>
-        <select id="filterPendapatan" class="form-control" style="max-width:400px;">
+        <select id="filterPendapatan" class="form-control mb-3" style="max-width:400px;">
             <option value="all">Semua</option>
             <option value="<800.000">Kurang dari Rp.800.000 (Desil 1)</option>
             <option value="800.000 - 1,2jt">Rp.800.000 - Rp.1,2jt (Desil 2)</option>
@@ -21,120 +22,154 @@
             <option value="1,8jt - 2,4jt">Rp.1,8jt - Rp.2,4jt (Desil 4)</option>
             <option value=">2,4jt">Lebih dari Rp.2,4jt (Desil 5)</option>
         </select>
+
+        {{-- Filter wilayah kecamatan --}}
+        <label for="filterKecamatan" class="form-label">Filter Kecamatan</label>
+        <select id="filterKecamatan" class="form-control">
+            <option value="all">Semua Kecamatan</option>
+        </select>
     </div>
 
-    <div id="map" style="height: 650px;"></div>
+    <div id="map" style="height: 590px;"></div>
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
     <script>
-        var map = L.map('map').setView([-7.5102683, 112.4173366], 13);
-
-        // Basemap
+        var map = L.map('map').setView([-7.5102683, 112.4173366], 12);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; OpenStreetMap contributors'
         }).addTo(map);
 
-        // Load GeoJSON wilayah
-        fetch("{{ asset('geojson/data.geojson') }}")
-            .then(res => res.json())
-            .then(geojson => {
-                var geoLayer = L.geoJSON(geojson, {
-                    style: {
-                        color: "black",
-                        weight: 1,
-                        fillColor: "violet",
-                        fillOpacity: 0.2
-                    },
-                    onEachFeature: function (feature, layer) {
-                        if (feature.properties) {
-                            layer.bindPopup(`<b>${feature.properties.NAMOBJ || 'Wilayah'}</b>`);
-                        }
-                    }
-                }).addTo(map);
-
-                map.fitBounds(geoLayer.getBounds());
-            });
-
-        // Helper kategori warna
         function getColorByPendapatan(pendapatan) {
             switch (pendapatan) {
-                case "<800.000": return "red";           // Desil 1
-                case "800.000 - 1,2jt": return "orange"; // Desil 2
-                case "1,2jt - 1,8jt": return "#FFD580";  // Desil 3
-                case "1,8jt - 2,4jt": return "yellow";   // Desil 4
-                case ">2,4jt": return "blue";            // Desil 5
-                default: return "gray";                  // fallback
+                case "<800.000":
+                    return "red";
+                case "800.000 - 1,2jt":
+                    return "orange";
+                case "1,2jt - 1,8jt":
+                    return "#FFD580";
+                case "1,8jt - 2,4jt":
+                    return "yellow";
+                case ">2,4jt":
+                    return "blue";
+                default:
+                    return "gray";
             }
         }
 
-        let allResidents = [];
         let markerLayer = L.layerGroup().addTo(map);
+        let currentPendapatan = "all";
+        let currentKecamatan = "all";
+        let kecamatanLayers = {};
 
-        // Fungsi load data dari server
-        function loadResidents(noKK = '') {
+        function loadResidents() {
             let url = "{{ route('map.residents') }}";
-            if (noKK) {
-                url += `?no_kk=${encodeURIComponent(noKK)}`;
+            let params = {};
+            
+            // Tambahkan filter kecamatan ke URL
+            if (currentKecamatan !== "all") {
+                params.kecamatan = currentKecamatan;
+            }
+
+            // Tambahkan filter pendapatan ke URL
+            if (currentPendapatan !== "all") {
+                // Catatan: Anda perlu memfilter pendapatan di sisi server juga jika ingin efisien,
+                // tapi kode ini hanya menunjukkan cara meneruskan parameter.
+                // Saat ini, filter pendapatan masih dilakukan di sisi klien.
+            }
+
+            // Gabungkan parameter menjadi query string
+            let queryString = new URLSearchParams(params).toString();
+            if (queryString) {
+                url += `?${queryString}`;
             }
 
             fetch(url)
                 .then(res => res.json())
                 .then(data => {
-                    allResidents = data;
-                    renderMarkers("all"); // default render semua (nanti tetap bisa filter pendapatan)
+                    renderMarkers(data);
                 });
         }
 
-        // Render awal
-        loadResidents();
-
-        // Fungsi render marker sesuai filter pendapatan
-        function renderMarkers(filterValue) {
+        function renderMarkers(residents) {
             markerLayer.clearLayers();
 
-            allResidents.forEach(resident => {
+            residents.forEach(resident => {
                 if (resident.latitude && resident.longitude) {
-                    if (filterValue === "all" || resident.pendapatan === filterValue) {
-                        let color = getColorByPendapatan(resident.pendapatan);
-
-                        let marker = L.circleMarker([resident.latitude, resident.longitude], {
-                            radius: 10,
-                            fillColor: color,
-                            color: "#000",
-                            weight: 1,
-                            opacity: 1,
-                            fillOpacity: 0.8
-                        }).bindPopup(`
-                            <div style="min-width:220px">
-                                <h6 style="margin:0; font-weight:bold;">${resident.nama_kepala_keluarga}</h6>
-                                <medium><b>No. KK:</b> ${resident.no_kk || '-'}</medium><br>
-                                <medium><b>Alamat:</b> ${resident.alamat}</medium><br>
-                                <medium><b>Pendapatan:</b> ${resident.pendapatan}</medium><br>
-                                <a href="/residents/${resident.id}" 
-                                   class="btn btn-primary btn-sm mt-2 text-white"
-                                   style="padding:4px 8px; font-size:12px;">
-                                    Detail
-                                </a>
-                            </div>
-                        `);
-
-                        markerLayer.addLayer(marker);
-                    }
+                    let color = getColorByPendapatan(resident.pendapatan);
+                    let marker = L.circleMarker([resident.latitude, resident.longitude], {
+                        radius: 10,
+                        fillColor: color,
+                        color: "#000",
+                        weight: 2,
+                        opacity: 1,
+                        fillOpacity: 0.5
+                    }).bindPopup(`
+                        <div style="min-width:220px">
+                            <h6 style="margin:0; font-weight:bold;">${resident.nama_kepala_keluarga}</h6>
+                            <medium><b>No. KK:</b> ${resident.no_kk || '-'}</medium><br>
+                            <medium><b>Alamat:</b> ${resident.alamat}</medium><br>
+                            <medium><b>Kecamatan:</b> ${resident.kecamatan}</medium><br>
+                            <medium><b>Pendapatan:</b> ${resident.pendapatan}</medium><br>
+                            <a href="/residents/${resident.id}"
+                               class="btn btn-primary btn-sm mt-2 text-white"
+                               style="padding:4px 8px; font-size:12px;">
+                                Detail
+                            </a>
+                        </div>
+                    `);
+                    markerLayer.addLayer(marker);
                 }
             });
         }
 
-        // Event filter pendapatan
-        document.getElementById("filterPendapatan").addEventListener("change", function () {
-            renderMarkers(this.value);
+        document.getElementById("filterPendapatan").addEventListener("change", function() {
+            currentPendapatan = this.value;
+            loadResidents(); // Panggil ulang untuk memuat data dengan filter baru
         });
 
+        document.getElementById("filterKecamatan").addEventListener("change", function() {
+            currentKecamatan = this.value;
+            loadResidents(); // Panggil ulang untuk memuat data dengan filter baru
+
+            // Reset dan highlight polygon
+            Object.values(kecamatanLayers).forEach(layer => {
+                layer.setStyle({
+                    color: "black",
+                    weight: 1,
+                    fillColor: "violet",
+                    fillOpacity: 0.2
+                });
+            });
+
+            if (currentKecamatan !== "all") {
+                let selectedLayer = kecamatanLayers[currentKecamatan];
+                if (selectedLayer) {
+                    selectedLayer.setStyle({
+                        color: "red",
+                        weight: 3,
+                        fillColor: "purple",
+                        fillOpacity: 0.4
+                    });
+                    map.fitBounds(selectedLayer.getBounds());
+                }
+            }
+        });
+        
         // Event search by Nomor KK
         document.getElementById("btnSearchKK").addEventListener("click", function () {
             let kk = document.getElementById("searchKK").value;
-            loadResidents(kk);
+            let url = "{{ route('map.residents') }}";
+            if (kk) {
+                url += `?no_kk=${encodeURIComponent(kk)}`;
+            }
+
+            fetch(url)
+                .then(res => res.json())
+                .then(data => {
+                    renderMarkers(data);
+                });
         });
 
         // Event reset search
@@ -146,7 +181,17 @@
         // Event tekan Enter di input search
         document.getElementById("searchKK").addEventListener("keyup", function (e) {
             if (e.key === "Enter") {
-                loadResidents(this.value);
+                let kk = this.value;
+                let url = "{{ route('map.residents') }}";
+                if (kk) {
+                    url += `?no_kk=${encodeURIComponent(kk)}`;
+                }
+                
+                fetch(url)
+                    .then(res => res.json())
+                    .then(data => {
+                        renderMarkers(data);
+                    });
             }
         });
 
@@ -171,12 +216,73 @@
 
             categories.forEach(cat => {
                 div.innerHTML +=
-                    `<i style="background:${cat.color}; width:20px; height:20px; display:inline-block; margin-right:8px; border:1px solid #000;"></i> 
+                    `<i style="background:${cat.color}; width:20px; height:20px; display:inline-block; margin-right:8px; border:1px solid #000;"></i>
                          <span style="font-weight:500;">${cat.label}</span><br>`;
             });
             return div;
         };
         legend.addTo(map);
+
+        // Load GeoJSON kecamatan + isi dropdown
+        fetch("{{ asset('geojson/kecamatan.geojson') }}")
+            .then(res => res.json())
+            .then(geojson => {
+                let dropdown = document.getElementById("filterKecamatan");
+                let kecamatanSet = new Set();
+                
+                geojson.features.forEach(f => {
+                    let namaKecamatan = f.properties.nm_kecamatan || f.properties.NAMOBJ || 'Kecamatan';
+                    kecamatanSet.add(namaKecamatan);
+                });
+
+                Array.from(kecamatanSet).sort().forEach(namaKecamatan => {
+                    let opt = document.createElement("option");
+                    opt.value = namaKecamatan;
+                    opt.textContent = namaKecamatan;
+                    dropdown.appendChild(opt);
+                });
+
+                var geoLayer = L.geoJSON(geojson, {
+                    style: {
+                        color: "black",
+                        weight: 1,
+                        fillColor: "violet",
+                        fillOpacity: 0.2
+                    },
+                    onEachFeature: function(feature, layer) {
+                        if (feature.properties) {
+                            let namaKecamatan = feature.properties.nm_kecamatan || feature.properties.NAMOBJ || 'Kecamatan';
+                            layer.bindPopup(`<b>${namaKecamatan}</b>`);
+                            kecamatanLayers[namaKecamatan] = layer;
+
+                            layer.on("click", function() {
+                                document.getElementById("filterKecamatan").value = namaKecamatan;
+                                currentKecamatan = namaKecamatan;
+                                loadResidents();
+
+                                Object.values(kecamatanLayers).forEach(l => {
+                                    l.setStyle({
+                                        color: "black",
+                                        weight: 1,
+                                        fillColor: "violet",
+                                        fillOpacity: 0.2
+                                    });
+                                });
+
+                                layer.setStyle({
+                                    color: "red",
+                                    weight: 3,
+                                    fillColor: "purple",
+                                    fillOpacity: 0.4
+                                });
+                                map.fitBounds(layer.getBounds());
+                            });
+                        }
+                    }
+                }).addTo(map);
+
+                map.fitBounds(geoLayer.getBounds());
+                loadResidents(); // Panggil awal setelah GeoJSON dimuat
+            });
     </script>
-    >
 @endsection

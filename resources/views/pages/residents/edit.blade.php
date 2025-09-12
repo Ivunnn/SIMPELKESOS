@@ -50,6 +50,18 @@
                                 <textarea class="form-control" id="alamat" name="alamat" rows="2">{{ old('alamat', $resident->alamat) }}</textarea>
                             </div>
 
+                            <div class="col-md-6 mb-3">
+                                <label for="kelurahan" class="form-label">Kelurahan/Desa</label>
+                                <input type="text" class="form-control" id="kelurahan" name="kelurahan"
+                                    value="{{ old('kelurahan', $resident->kelurahan) }}">
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="kecamatan" class="form-label">Kecamatan</label>
+                                <input type="text" class="form-control" id="kecamatan" name="kecamatan"
+                                    value="{{ old('kecamatan', $resident->kecamatan) }}">
+                            </div>
+
                             {{-- Status Kepemilikan Rumah --}}
                             <div class="col-md-6 mb-3">
                                 <label for="status_kepemilikan_rumah" class="form-label">Status Kepemilikan Rumah</label>

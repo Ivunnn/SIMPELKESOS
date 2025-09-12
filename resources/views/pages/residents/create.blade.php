@@ -43,6 +43,18 @@
                         </div>
 
                         <div class="form-group mb-3">
+                            <label for="kelurahan">Kelurahan/Desa</label>
+                            <input type="text" class="form-control" id="kelurahan" name="kelurahan" value="{{ old('kelurahan') }}"
+                                required>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="kecamatan">Kecamatan</label>
+                            <input type="text" class="form-control" id="kecamatan" name="kecamatan" value="{{ old('kecamatan') }}"
+                                required>
+                        </div>
+
+                        <div class="form-group mb-3">
                             <label for="status_kepemilikan_rumah">Status Kepemilikan Rumah</label>
                             <select class="form-control" name="status_kepemilikan_rumah">
                                 <option value="Milik Sendiri">Milik Sendiri</option>

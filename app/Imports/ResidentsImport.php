@@ -18,6 +18,8 @@ class ResidentsImport implements ToModel, WithHeadingRow
                 'nama_kepala_keluarga' => $row['nama_kepala_keluarga'] ?? null,
                 'usaha' => $row['usaha'] ?? null,
                 'alamat' => $row['alamat'] ?? null,
+                'kelurahan' => $row['kelurahan'] ?? null,
+                'kecamatan' => $row['kecamatan'] ?? null,
                 'status_kepemilikan_rumah' => $row['status_kepemilikan_rumah'] ?? null,
                 'jumlah_keluarga' => isset($row['jumlah_keluarga']) ? (int) $row['jumlah_keluarga'] : null,
                 'jenis_lantai' => $row['jenis_lantai'] ?? null,

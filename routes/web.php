@@ -37,6 +37,9 @@ Route::middleware('auth')->group(function () {
     // Map
     Route::get('/map', [MapController::class, 'index'])->name('map.index');
     Route::get('/map/residents', [MapController::class, 'getResidents'])->name('map.residents');
+    Route::get('/map/kecamatan', [App\Http\Controllers\MapController::class, 'getKecamatan'])
+    ->name('map.kecamatan');
+
 
     // Nested route untuk anggota keluarga
     Route::post('residents/{resident}/family-members', [FamilyMemberController::class, 'store'])->name('family-members.store');
