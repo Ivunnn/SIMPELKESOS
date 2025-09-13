@@ -39,6 +39,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/map/residents', [MapController::class, 'getResidents'])->name('map.residents');
     Route::get('/map/kecamatan', [App\Http\Controllers\MapController::class, 'getKecamatan'])
     ->name('map.kecamatan');
+Route::get('/api/residents', [MapController::class, 'getResidents'])->name('map.residents');
+Route::get('/map/export/excel', [MapController::class, 'exportExcel'])->name('map.export.excel');
+Route::get('/map/export/pdf', [MapController::class, 'exportPdf'])->name('map.export.pdf');
+
 
 
     // Nested route untuk anggota keluarga

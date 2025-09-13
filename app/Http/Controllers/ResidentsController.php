@@ -8,6 +8,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\ResidentsImport;
 use App\Models\FamilyMember;
+use App\Exports\ResidentsExport;
 
 class ResidentsController extends Controller
 {
@@ -135,6 +136,5 @@ class ResidentsController extends Controller
         return redirect()->route('residents.index')
             ->with('success', 'Data penduduk berhasil diimport.');
     }
-
 
 }

@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Residents;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\ResidentsExport;
 
 class MapController extends Controller
 {
@@ -13,26 +16,28 @@ class MapController extends Controller
         return view('pages.map.index');
     }
 
-    // API data marker
+    // API data marker dengan filter
     public function getResidents(Request $request)
     {
-        $query = Residents::query()
-            // Pastikan kolom koordinat dipilih agar bisa dibaca di view
-            ->select('id', 'no_kk', 'nama_kepala_keluarga', 'alamat', 'kecamatan', 'kelurahan', 'pendapatan', 'latitude', 'longitude');
+        $query = Residents::query();
 
-        if ($request->has('no_kk')) {
+        // Filter berdasarkan no_kk
+        if ($request->has('no_kk') && $request->no_kk !== null) {
             $query->where('no_kk', $request->no_kk);
         }
 
-        // Tambahkan filter kecamatan
+        // Filter kecamatan
         if ($request->has('kecamatan') && $request->kecamatan !== 'all') {
             $query->where('kecamatan', $request->kecamatan);
         }
 
-        // Anda bisa menambahkan filter pendapatan di sini juga untuk performa yang lebih baik
-        // if ($request->has('pendapatan') && $request->pendapatan !== 'all') {
-        //     $query->where('pendapatan', $request->pendapatan);
-        // }
+        // Filter pendapatan
+        if ($request->has('pendapatan') && $request->pendapatan !== 'all') {
+            $query->where('pendapatan', $request->pendapatan);
+        }
+
+        // Pastikan hanya data yang punya lat & lng
+        $query->whereNotNull('latitude')->whereNotNull('longitude');
 
         return response()->json($query->get());
     }
@@ -44,7 +49,6 @@ class MapController extends Controller
         $geojson = json_decode(file_get_contents($geojsonPath), true);
 
         $kecamatanList = collect($geojson['features'])
-            // Mengambil properti yang tepat dari file GeoJSON
             ->pluck('properties.nm_kecamatan')
             ->unique()
             ->sort()
@@ -52,4 +56,37 @@ class MapController extends Controller
 
         return response()->json($kecamatanList);
     }
+
+      public function exportExcel(Request $request)
+{
+    return Excel::download(new ResidentsExport(
+        $request->kecamatan,
+        $request->pendapatan,
+        $request->no_kk
+    ), 'residents.xlsx');
+}
+
+public function exportPdf(Request $request)
+{
+    $query = Residents::query();
+
+    if ($request->kecamatan && $request->kecamatan !== 'all') {
+        $query->where('kecamatan', $request->kecamatan);
+    }
+
+    if ($request->pendapatan && $request->pendapatan !== 'all') {
+        $query->where('pendapatan', $request->pendapatan);
+    }
+
+    if ($request->no_kk) {
+        $query->where('no_kk', $request->no_kk);
+    }
+
+    $residents = $query->get();
+
+    $pdf = PDF::loadView('exports.residents_pdf', compact('residents'));
+    return $pdf->download('residents.pdf');
+}
+
+
 }
