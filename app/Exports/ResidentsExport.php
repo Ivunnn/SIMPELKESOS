@@ -37,13 +37,12 @@ class ResidentsExport implements FromCollection, WithHeadings
         }
 
         return $query->select([
-            'no_kk', 'nama_kepala_keluarga', 'pendapatan', 
-            'kecamatan', 'latitude', 'longitude'
+            'no_kk', 'nama_kepala_keluarga', 'pendapatan', 'alamat', 'kelurahan', 'kecamatan'
         ])->get();
     }
 
     public function headings(): array
     {
-        return ['No KK', 'Nama Kepala Keluarga', 'Pendapatan', 'Kecamatan', 'Latitude', 'Longitude'];
+        return ['no_kk', 'nama_kepala_keluarga', 'pendapatan', 'alamat', 'kelurahan', 'kecamatan'];
     }
 }
