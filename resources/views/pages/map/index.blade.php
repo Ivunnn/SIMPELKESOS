@@ -36,7 +36,7 @@
     </div>
 </div>
 
-<div id="map" style="height: 590px;"></div>
+<div id="map" style="height: 560px;"></div>
 
 {{-- Leaflet & Heatmap --}}
 <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
@@ -220,7 +220,7 @@
 
         categories.forEach(cat => {
             div.innerHTML +=
-                `<i style="background:${cat.color}; width:20px; height:20px; display:inline-block; margin-right:8px; border:1px solid #000;"></i>
+                `<i style="background:${cat.color}; width:10px; height:10px; display:inline-block; margin-right:8px; border:1px solid #000;"></i>
                  <span style="font-weight:500;">${cat.label}</span><br>`;
         });
         return div;

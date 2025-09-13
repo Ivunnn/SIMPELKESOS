@@ -117,13 +117,15 @@ class ResidentsController extends Controller
     /**
      * Remove the specified resident from storage.
      */
-    public function destroy(Residents $resident)
+    public function destroy($id)
     {
-        $resident->delete();
+    $resident = Residents::findOrFail($id);
+    $resident->delete();
 
-        return redirect()->route('residents.index')
-            ->with('success', 'Data penduduk berhasil dihapus.');
+    return redirect()->route('residents.index')
+        ->with('success', 'Data penduduk berhasil dihapus.');
     }
+
 
     /**
      * Download detail resident as PDF.

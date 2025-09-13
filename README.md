@@ -19,6 +19,7 @@ Dibangun menggunakan **Laravel 12**, aplikasi ini membantu perangkat desa dalam:
   - Upload foto rumah, foto dalam, dan foto kamar mandi
   - Import data dari file **Excel/CSV**
   - Export detail data penduduk ke **PDF**
+  - Filter data daerah kecamatan
   - Tambah dan kelola anggota keluarga
 
 - **Dashboard**
@@ -29,7 +30,9 @@ Dibangun menggunakan **Laravel 12**, aplikasi ini membantu perangkat desa dalam:
 - **Peta Desa (Leaflet.js)**
   - Visualisasi lokasi rumah berdasarkan koordinat
   - Filter berdasarkan kategori pendapatan (desil)
+  - Filter data daerah kecamatan
   - Cari penduduk berdasarkan nomor KK
+  - Export detail data penduduk ke **PDF**
   - Marker interaktif dengan detail penduduk
 
 - **Akun Pengguna**

@@ -93,7 +93,7 @@
 
                             {{-- Foto Rumah --}}
                             <div class="col-md-6 mb-3">
-                                <label for="foto_rumah" class="form-label">Foto Rumah</label>
+                                <label for="foto_rumah" class="form-label">Foto Depan Rumah</label>
                                 @if($resident->foto_rumah)
                                     <div class="mb-2">
                                         <img src="{{ asset('storage/'.$resident->foto_rumah) }}" alt="Foto Rumah" class="img-fluid rounded" style="max-width:200px">

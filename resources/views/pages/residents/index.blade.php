@@ -64,7 +64,7 @@
                             <form action="{{ route('residents.import') }}" method="POST" enctype="multipart/form-data" class="d-flex gap-2">
                                 @csrf
                                 <input type="file" name="file" required class="form-control">
-                                <button type="submit" class="btn btn-success flex-shrink-0">
+                                <button type="submit" class="btn btn-success flex-shrink-0 ml-2">
                                     <i class="fas fa-file-import"></i> Import
                                 </button>
                             </form>
@@ -117,11 +117,16 @@
                                         <a href="{{ route('residents.edit', $resident->id) }}" class="btn btn-warning btn-sm" title="Edit">
                                             <i class="fas fa-pen"></i>
                                         </a>
-                                        <button type="button" class="btn btn-danger btn-sm" title="Hapus" data-bs-toggle="modal" data-bs-target="#confirmationDelete-{{ $resident->id }}">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
+                                        <button type="button"
+                                        class="btn btn-danger btn-sm btn-delete"
+                                        data-toggle="modal"
+                                        data-target="#confirmationDelete"
+                                        data-id="{{ $resident->id }}"
+                                        data-no-kk="{{ $resident->no_kk }}"
+                                        title="Hapus">
+                                    <i class="fas fa-trash"></i>
+                                    </button>
                                     </div>
-                                    @include('pages.residents.confirmation-delete', ['resident' => $resident])
                                 </td>
                             </tr>
                         @empty
@@ -136,13 +141,55 @@
             </div>
 
             @if ($residents->hasPages())
-                {{-- Pagination --}}
-    <div class="d-flex justify-content-center mt-3">
-        {{ $residents->appends(request()->all())->links('vendor.pagination.custom') }}
-    </div>
+                <div class="d-flex justify-content-center mt-3">
+                    {{ $residents->appends(request()->all())->links('vendor.pagination.custom') }}
+                </div>
             @endif
         </div>
     </div>
-
 </div>
+<!-- Confirmation Delete Modal -->
+<div class="modal fade" id="confirmationDelete" tabindex="-1" role="dialog" aria-labelledby="confirmationDeleteLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <form method="POST" id="deleteForm">
+      @csrf
+      @method('DELETE')
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="confirmationDeleteLabel">Konfirmasi Hapus</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Tutup">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>Apakah Anda yakin ingin menghapus data dengan No. KK <strong class="delete-target">-</strong> ?</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+          <button type="submit" class="btn btn-danger">Hapus</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
 @endsection
+
+@push('scripts')
+<script>
+$(function(){
+    var $modal = $('#confirmationDelete');
+    var $form = $('#deleteForm');
+    var template = "{{ route('residents.destroy', ':id') }}";
+
+    $modal.on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        var id = button.data('id');
+        var noKk = button.data('no-kk');
+
+        $form.attr('action', template.replace(':id', id));
+        $modal.find('.delete-target').text(noKk);
+    });
+});
+</script>
+@endpush

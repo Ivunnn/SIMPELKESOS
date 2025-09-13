@@ -197,7 +197,7 @@
 
 
                         <div class="form-group mb-3">
-                            <label for="foto_rumah">Foto Rumah (Tampak Depan/Atas)</label>
+                            <label for="foto_rumah">Foto Rumah (Tampak Depan)</label>
                             <input type="file" class="form-control" id="foto_rumah" name="foto_rumah" accept="image/*">
                         </div>
 

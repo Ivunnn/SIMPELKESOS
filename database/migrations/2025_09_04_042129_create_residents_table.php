@@ -16,13 +16,10 @@ return new class extends Migration {
     $table->string('no_nik_kepala_keluarga')->nullable()->unique();
     $table->string('nama_kepala_keluarga');
     $table->string('alamat')->nullable();
-
     // Tambahan wilayah
     $table->string('kecamatan')->nullable();
     $table->string('kelurahan')->nullable();
-
     $table->string('status_kepemilikan_rumah')->nullable();
-
     // Pilihan disimpan sebagai string
     $table->string('usaha')->nullable();
     $table->integer('jumlah_keluarga')->nullable();
