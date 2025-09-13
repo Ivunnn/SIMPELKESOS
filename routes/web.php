@@ -33,6 +33,10 @@ Route::middleware('auth')->group(function () {
     Route::resource('residents', ResidentsController::class);
     Route::get('residents/{resident}/pdf', [ResidentsController::class, 'downloadPdf'])->name('residents.pdf');
     Route::post('/residents/import', [ResidentsController::class, 'import'])->name('residents.import');
+    // Export data
+Route::get('/residents/export/excel', [ResidentsController::class, 'exportExcel'])->name('residents.export.excel');
+Route::get('/residents/export/pdf', [ResidentsController::class, 'exportPdf'])->name('residents.export.pdf');
+
 
     // Map
     Route::get('/map', [MapController::class, 'index'])->name('map.index');

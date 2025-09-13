@@ -16,21 +16,35 @@ class ResidentsController extends Controller
      * Display a listing of the residents.
      */
     public function index(Request $request)
-    {
-        $query = Residents::query();
+{
+    $query = Residents::query();
 
-        // Jika ada pencarian berdasarkan no_kk
-        if ($request->has('search') && $request->search != '') {
-            $query->where('no_kk', 'like', '%' . $request->search . '%');
-        }
-
-        $residents = $query->orderBy('created_at', 'desc')->paginate(10);
-
-        // Biar pagination tetap bawa query pencarian
-        $residents->appends($request->only('search'));
-
-        return view('pages.residents.index', compact('residents'));
+    // Filter pencarian KK
+    if ($request->filled('search')) {
+        $query->where('no_kk', 'like', '%' . $request->search . '%');
     }
+
+    // Filter kecamatan
+    if ($request->filled('kecamatan') && $request->kecamatan !== 'all') {
+        $query->where('kecamatan', $request->kecamatan);
+    }
+
+    // Filter pendapatan (desil)
+    if ($request->filled('pendapatan') && $request->pendapatan !== 'all') {
+        $query->where('pendapatan', $request->pendapatan);
+    }
+
+    $residents = $query->orderBy('created_at', 'desc')->paginate(10);
+
+    // Bawa filter ke pagination
+    $residents->appends($request->all());
+
+    // Ambil daftar kecamatan dari database
+    $kecamatanList = Residents::select('kecamatan')->distinct()->pluck('kecamatan');
+
+    return view('pages.residents.index', compact('residents', 'kecamatanList'));
+}
+
 
 
     /**
@@ -136,5 +150,42 @@ class ResidentsController extends Controller
         return redirect()->route('residents.index')
             ->with('success', 'Data penduduk berhasil diimport.');
     }
+
+    public function exportExcel(Request $request)
+{
+    $query = Residents::query();
+
+    if ($request->filled('kecamatan') && $request->kecamatan !== 'all') {
+        $query->where('kecamatan', $request->kecamatan);
+    }
+
+    if ($request->filled('pendapatan') && $request->pendapatan !== 'all') {
+        $query->where('pendapatan', $request->pendapatan);
+    }
+
+    $data = $query->get();
+
+    return Excel::download(new \App\Exports\ResidentsExport($data), 'residents.xlsx');
+}
+
+public function exportPdf(Request $request)
+{
+    $query = Residents::query();
+
+    if ($request->filled('kecamatan') && $request->kecamatan !== 'all') {
+        $query->where('kecamatan', $request->kecamatan);
+    }
+
+    if ($request->filled('pendapatan') && $request->pendapatan !== 'all') {
+        $query->where('pendapatan', $request->pendapatan);
+    }
+
+    $data = $query->get();
+
+    $pdf = Pdf::loadView('pages.residents.export-pdf', compact('data'))
+        ->setPaper('a4', 'landscape');
+
+    return $pdf->download('residents.pdf');
+}
 
 }

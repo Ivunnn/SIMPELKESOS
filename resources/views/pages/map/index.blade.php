@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="mb-3">
-    <h1 class="mb-4 fw-bold">Peta Layanan Kesejahteraan Sosial</h1>
+    <h3 class="mb-4 fw-bold">Peta Layanan Kesejahteraan Sosial</h3>
 
     {{-- Search by Nomor KK --}}
     <div class="d-flex mb-3" style="gap:10px; max-width:500px;">
@@ -10,8 +10,6 @@
         <button id="btnSearchKK" class="btn btn-primary">Cari</button>
         <button id="btnResetKK" class="btn btn-secondary">Reset</button>
     </div>
-
-    {{-- Filter pendapatan --}}
     <label for="filterPendapatan" class="form-label">Filter Pendapatan per-kapita/bulan</label>
     <select id="filterPendapatan" class="form-control mb-3" style="max-width:400px;">
         <option value="all">Semua</option>
@@ -28,11 +26,13 @@
         <option value="all">Semua Kecamatan</option>
     </select>
 
+    {{-- Filter pendapatan --}}
+
     {{-- Action Buttons --}}
     <div class="d-flex mb-3" style="gap:10px;">
-        <a href="{{ route('map.export.excel') }}" id="btnExportExcel" class="btn btn-success">📊 Export Excel</a>
-        <a href="{{ route('map.export.pdf') }}" id="btnExportPdf" class="btn btn-danger">📑 Export PDF</a>
-        <button id="toggleHeatmap" class="btn btn-warning">🌡️ Toggle Heatmap</button>
+        <a href="{{ route('map.export.excel') }}" id="btnExportExcel" class="btn btn-success btn-sm">📊 Export Excel</a>
+        <a href="{{ route('map.export.pdf') }}" id="btnExportPdf" class="btn btn-danger btn-sm">📑 Export PDF</a>
+        <button id="toggleHeatmap" class="btn btn-warning btn-sm">🌡️ Toggle Heatmap</button>
     </div>
 </div>
 

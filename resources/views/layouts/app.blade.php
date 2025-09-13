@@ -20,6 +20,9 @@
     <!-- Custom styles for this template-->
     <link href="{{asset('template/css/sb-admin-2.min.css')}}" rel="stylesheet">
 
+    {{-- KITA TAMBAHKAN "KOTAK SURAT" UNTUK CSS DI SINI --}}
+    @stack('styles')
+
 </head>
 
 <body id="page-top">
@@ -44,10 +47,6 @@
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
                     @yield('content')
-                    <!-- Page Heading -->
-
-
-
                 </div>
                 <!-- /.container-fluid -->
 
@@ -90,8 +89,8 @@
     </div>
 
     <!-- Bootstrap core JavaScript-->
-    <script src="{{asset('template/vendor/jquery/jquery.min.js')}}""></script>
-    <script src=" {{asset('template/vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+    <script src="{{asset('template/vendor/jquery/jquery.min.js')}}"></script>
+    <script src="{{asset('template/vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
 
     <!-- Core plugin JavaScript-->
     <script src="{{asset('template/vendor/jquery-easing/jquery.easing.min.js')}}"></script>
@@ -99,13 +98,8 @@
     <!-- Custom scripts for all pages-->
     <script src="{{asset('template/js/sb-admin-2.min.js')}}"></script>
 
-    <!-- Page level plugins -->
-    <script src="{{asset('template/vendor/chart.js/Chart.min.js')}}"></script>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
-    <!-- Page level custom scripts -->
-    <script src="{{asset('template/js/demo/chart-area-demo.js')}}"></script>
-    <script src="{{asset('template/js/demo/chart-pie-demo.js')}}"></script>
+    {{-- KITA TAMBAHKAN "KOTAK SURAT" UNTUK SCRIPT DI SINI --}}
+    @stack('scripts')
 
 </body>
 
