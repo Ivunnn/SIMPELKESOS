@@ -7,6 +7,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\FamilyMemberController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,21 +30,19 @@ Route::middleware('auth')->group(function () {
     Route::post('/account/update-profile', [AccountController::class, 'updateProfile'])->name('account.updateProfile');
     Route::post('/account/update-password', [AccountController::class, 'updatePassword'])->name('account.updatePassword');
 
+    // Residents
     Route::prefix('residents')->group(function () {
-    Route::post('/import', [ResidentsController::class, 'import'])->name('residents.import');
-    Route::get('/export/excel', [ResidentsController::class, 'exportExcel'])->name('residents.export.excel');
-    Route::get('/export/pdf', [ResidentsController::class, 'exportPdf'])->name('residents.export.pdf');
-    Route::get('/{resident}/pdf', [ResidentsController::class, 'downloadPdf'])->name('residents.pdf');
+        Route::post('/import', [ResidentsController::class, 'import'])->name('residents.import');
+        Route::get('/export/excel', [ResidentsController::class, 'exportExcel'])->name('residents.export.excel');
+        Route::get('/export/pdf', [ResidentsController::class, 'exportPdf'])->name('residents.export.pdf');
+        Route::get('/{resident}/pdf', [ResidentsController::class, 'downloadPdf'])->name('residents.pdf');
     });
-
-
     Route::resource('residents', ResidentsController::class);
 
     // Map
     Route::get('/map', [MapController::class, 'index'])->name('map.index');
     Route::get('/map/residents', [MapController::class, 'getResidents'])->name('map.residents');
-    Route::get('/map/kecamatan', [App\Http\Controllers\MapController::class, 'getKecamatan'])
-        ->name('map.kecamatan');
+    Route::get('/map/kecamatan', [MapController::class, 'getKecamatan'])->name('map.kecamatan');
     Route::get('/api/residents', [MapController::class, 'getResidents'])->name('map.residents');
     Route::get('/map/export/excel', [MapController::class, 'exportExcel'])->name('map.export.excel');
     Route::get('/map/export/pdf', [MapController::class, 'exportPdf'])->name('map.export.pdf');
@@ -51,4 +50,13 @@ Route::middleware('auth')->group(function () {
     // Nested route untuk anggota keluarga
     Route::post('residents/{resident}/family-members', [FamilyMemberController::class, 'store'])->name('family-members.store');
     Route::delete('residents/{resident}/family-members/{familyMember}', [FamilyMemberController::class, 'destroy'])->name('family-members.destroy');
+
+    // Hanya admin yang boleh akses manajemen user
+    Route::middleware('admin')->group(function () {
+        Route::resource('users', UserController::class);
+    });
+
+    // Kecamatan List
+    Route::get('/kecamatan/list', [MapController::class, 'getKecamatanList'])->name('kecamatan.list');
 });
+

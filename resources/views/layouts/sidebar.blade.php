@@ -41,6 +41,16 @@
         </a>
     </li>
 
+@if(Auth::check() && Auth::user()->role === 'admin')
+    <li class="nav-item {{ request()->is('users*') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('users.index') }}">
+            <i class="fas fa-fw fa-user"></i>
+            <span>Manajemen Pengguna</span>
+        </a>
+    </li>
+@endif
+
+
     <!-- Sidebar Toggler -->
     <div class="text-center d-none d-md-inline">
         <button class="rounded-circle border-0" id="sidebarToggle"></button>

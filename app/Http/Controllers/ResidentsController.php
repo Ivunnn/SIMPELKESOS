@@ -102,17 +102,33 @@ class ResidentsController extends Controller
      * Update the specified resident in storage.
      */
     public function update(Request $request, Residents $resident)
-    {
-        $request->validate([
-            'no_kk' => 'required|unique:residents,no_kk,' . $resident->id,
-            'nama_kepala_keluarga' => 'required|string|max:255',
-        ]);
+{
+    $request->validate([
+        'no_kk' => 'required|unique:residents,no_kk,' . $resident->id,
+        'nama_kepala_keluarga' => 'required|string|max:255',
+    ]);
 
-        $resident->update($request->all());
+    $data = $request->all();
 
-        return redirect()->route('residents.index')
-            ->with('success', 'Data penduduk berhasil diperbarui.');
+    // Upload foto baru jika ada
+    if ($request->hasFile('foto_rumah')) {
+        $data['foto_rumah'] = $request->file('foto_rumah')->store('uploads/residents', 'public');
     }
+
+    if ($request->hasFile('foto_tampak_dalam')) {
+        $data['foto_tampak_dalam'] = $request->file('foto_tampak_dalam')->store('uploads/residents', 'public');
+    }
+
+    if ($request->hasFile('foto_kamar_mandi')) {
+        $data['foto_kamar_mandi'] = $request->file('foto_kamar_mandi')->store('uploads/residents', 'public');
+    }
+
+    $resident->update($data);
+
+    return redirect()->route('residents.index')
+        ->with('success', 'Data penduduk berhasil diperbarui.');
+}
+
 
     /**
      * Remove the specified resident from storage.

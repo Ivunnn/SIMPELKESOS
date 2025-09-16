@@ -10,6 +10,7 @@
         <button id="btnSearchKK" class="btn btn-primary">Cari</button>
         <button id="btnResetKK" class="btn btn-secondary">Reset</button>
     </div>
+    {{-- Filter pendapatan --}}
     <label for="filterPendapatan" class="form-label">Filter Pendapatan per-kapita/bulan</label>
     <select id="filterPendapatan" class="form-control mb-3" style="max-width:400px;">
         <option value="all">Semua</option>
@@ -25,8 +26,6 @@
     <select id="filterKecamatan" class="form-control mb-3" style="max-width:400px;">
         <option value="all">Semua Kecamatan</option>
     </select>
-
-    {{-- Filter pendapatan --}}
 
     {{-- Action Buttons --}}
     <div class="d-flex mb-3" style="gap:10px;">
@@ -94,32 +93,40 @@
 
     // --- Render Markers ---
     function renderMarkers(residents) {
-        markerLayer.clearLayers();
-        if (heatmapLayer) map.removeLayer(heatmapLayer);
+    markerLayer.clearLayers();
+    if (heatmapLayer) map.removeLayer(heatmapLayer);
 
-        residents.forEach(resident => {
-            if (resident.latitude && resident.longitude) {
-                let color = getColorByPendapatan(resident.pendapatan);
-                let marker = L.circleMarker([resident.latitude, resident.longitude], {
-                    radius: 10,
-                    fillColor: color,
-                    color: "#000",
-                    weight: 2,
-                    opacity: 1,
-                    fillOpacity: 0.5
-                }).bindPopup(`
-                    <div style="min-width:220px">
-                        <h6 style="margin:0; font-weight:bold;">${resident.nama_kepala_keluarga || '-'}</h6>
-                        <medium><b>No. KK:</b> ${resident.no_kk || '-'}</medium><br>
-                        <medium><b>Alamat:</b> ${resident.alamat || '-'}</medium><br>
-                        <medium><b>Kecamatan:</b> ${resident.kecamatan || '-'}</medium><br>
-                        <medium><b>Pendapatan:</b> ${resident.pendapatan || '-'}</medium><br>
-                    </div>
-                `);
-                markerLayer.addLayer(marker);
-            }
-        });
-    }
+    residents.forEach(resident => {
+        if (resident.latitude && resident.longitude) {
+            let color = getColorByPendapatan(resident.pendapatan);
+
+            let marker = L.circleMarker([resident.latitude, resident.longitude], {
+                radius: 10,
+                fillColor: color,
+                color: "#000",
+                weight: 2,
+                opacity: 1,
+                fillOpacity: 0.5
+            }).bindPopup(`
+                <div style="min-width:220px">
+                    <h6 style="margin:0; font-weight:bold;">
+                        ${resident.nama_kepala_keluarga || '-'}
+                    </h6>
+                    <medium><b>No. KK:</b> ${resident.no_kk || '-'} </medium><br>
+                    <medium><b>Alamat:</b> ${resident.alamat || '-'}</medium><br>
+                    <medium><b>Kecamatan:</b> ${resident.kecamatan || '-'}</medium><br>
+                    <medium><b>Pendapatan:</b> ${resident.pendapatan || '-'}</medium><br>
+                    <a href="/residents/${resident.id}" class="btn btn-sm btn-primary mt-2 text-light">
+                        <i class="fas fa-eye"></i> Detail
+                    </a>
+                </div>
+            `);
+
+            markerLayer.addLayer(marker);
+        }
+    });
+}
+
 
     // --- Render Heatmap ---
     function renderHeatmap(residents) {

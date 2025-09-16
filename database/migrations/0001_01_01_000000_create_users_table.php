@@ -17,6 +17,11 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            
+            // tambahan untuk kebutuhan role & kecamatan
+            $table->enum('role', ['admin', 'kecamatan'])->default('kecamatan');
+            $table->string('kecamatan')->nullable(); // filter data per kecamatan
+
             $table->rememberToken();
             $table->timestamps();
         });
