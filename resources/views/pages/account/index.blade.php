@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="container-fluid">
-        <h2 class="mb-4 fw-bold text-center text-lg-start">Akun Saya</h2>
+        <h2 class="mb-4 fw-bold text-lg-start">Akun Saya</h2>
 
         {{-- Flash message --}}
         @if(session('success'))
@@ -43,33 +43,6 @@
                             <div class="">
                                 <button type="submit" class="btn btn-primary w-100 ">Update Profil</button>
                             </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-
-            {{-- Update Password --}}
-            <div class="col-12 col-md-6">
-                <div class="card h-100 shadow-sm">
-                    <div class="card-header bg-warning text-dark fw-bold">
-                        Ubah Password
-                    </div>
-                    <div class="card-body">
-                        <form action="{{ route('account.updatePassword') }}" method="POST">
-                            @csrf
-                            <div class="mb-3">
-                                <label class="form-label">Password Lama</label>
-                                <input type="password" name="current_password" class="form-control">
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Password Baru</label>
-                                <input type="password" name="password" class="form-control">
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Konfirmasi Password Baru</label>
-                                <input type="password" name="password_confirmation" class="form-control">
-                            </div>
-                            <button type="submit" class="btn btn-warning w-100">Ubah Password</button>
                         </form>
                     </div>
                 </div>

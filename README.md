@@ -56,6 +56,9 @@ Dibangun menggunakan **Laravel 12**, aplikasi ini membantu perangkat desa dalam:
 ### Akun Pengguna
 ![Akun Pengguna](public/screenshots/akun.png)
 
+### Manajemen Pengguna
+![Manajemen Pengguna](public/screenshots/pengguna.png)
+
 ---
 
 ## 🛠️ Teknologi yang Digunakan
