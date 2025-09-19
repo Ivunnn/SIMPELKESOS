@@ -20,26 +20,5 @@ class UserSeeder extends Seeder
                 'kecamatan' => null, // admin bisa akses semua data
             ]
         );
-
-        // Contoh akun Kecamatan
-        User::updateOrCreate(
-            ['email' => 'jatirejo@desa.com'],
-            [
-                'name' => 'Petugas Kecamatan Jatirejo',
-                'password' => Hash::make('password123'),
-                'role' => 'pendamping',
-                'kecamatan' => 'Jatirejo',
-            ]
-        );
-
-        User::updateOrCreate(
-            ['email' => 'mojosari@desa.com'],
-            [
-                'name' => 'Petugas Kecamatan Mojosari',
-                'password' => Hash::make('password123'),
-                'role' => 'pendamping',
-                'kecamatan' => 'Mojosari',
-            ]
-        );
     }
 }

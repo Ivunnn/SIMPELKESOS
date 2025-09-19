@@ -63,7 +63,7 @@ Dibangun menggunakan **Laravel 12**, aplikasi ini membantu perangkat desa dalam:
 
 ## 🛠️ Teknologi yang Digunakan
 - [Laravel 12](https://laravel.com/)
-- [MySQL](https://www.mysql.com/) / MariaDB
+- [MySQL](https://www.mysql.com/)
 - [Bootstrap 5](https://getbootstrap.com/)
 - [Leaflet.js](https://leafletjs.com/) (peta interaktif)
 - [SweetAlert2](https://sweetalert2.github.io/) (alert interaktif)
@@ -96,8 +96,8 @@ Dibangun menggunakan **Laravel 12**, aplikasi ini membantu perangkat desa dalam:
    ```bash
    php artisan migrate --seed
    ```
-   Akun program :
-   Email    : admin@desa.com
+   Akun program : </br>
+   Email    : admin@desa.com </br>
    Password : password123
 6. **Jalankan Server**
    ```bash
