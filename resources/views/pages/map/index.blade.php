@@ -10,6 +10,7 @@
             <button id="btnSearchKK" class="btn btn-primary">Cari</button>
             <button id="btnResetKK" class="btn btn-secondary">Reset</button>
         </div>
+
         {{-- Filter pendapatan --}}
         <label for="filterPendapatan" class="form-label">Filter Pendapatan per-kapita/bulan</label>
         <select id="filterPendapatan" class="form-control mb-3" style="max-width:400px;">
@@ -21,11 +22,13 @@
             <option value=">2,4jt">Lebih dari Rp.2,4jt (Desil 5)</option>
         </select>
 
-        {{-- Filter wilayah kecamatan --}}
-        <label for="filterKecamatan" class="form-label">Filter Kecamatan</label>
-        <select id="filterKecamatan" class="form-control mb-3" style="max-width:400px;">
-            <option value="all">Semua Kecamatan</option>
-        </select>
+        {{-- Filter wilayah kecamatan (hanya admin) --}}
+        @if(Auth::user()->role === 'admin')
+            <label for="filterKecamatan" class="form-label">Filter Kecamatan</label>
+            <select id="filterKecamatan" class="form-control mb-3" style="max-width:400px;">
+                <option value="all">Semua Kecamatan</option>
+            </select>
+        @endif
 
         {{-- Action Buttons --}}
         <div class="d-flex mb-3" style="gap:10px;">
@@ -108,25 +111,24 @@
                         opacity: 1,
                         fillOpacity: 0.5
                     }).bindPopup(`
-                    <div style="min-width:220px">
-                        <h6 style="margin:0; font-weight:bold;">
-                            ${resident.nama_kepala_keluarga || '-'}
-                        </h6>
-                        <medium><b>No. KK:</b> ${resident.no_kk || '-'} </medium><br>
-                        <medium><b>Alamat:</b> ${resident.alamat || '-'}</medium><br>
-                        <medium><b>Kecamatan:</b> ${resident.kecamatan || '-'}</medium><br>
-                        <medium><b>Pendapatan:</b> ${resident.pendapatan || '-'}</medium><br>
-                        <a href="/residents/${resident.id}" class="btn btn-sm btn-primary mt-2 text-light">
-                            <i class="fas fa-eye"></i> Detail
-                        </a>
-                    </div>
-                `);
+                            <div style="min-width:220px">
+                                <h6 style="margin:0; font-weight:bold;">
+                                    ${resident.nama_kepala_keluarga || '-'}
+                                </h6>
+                                <medium><b>No. KK:</b> ${resident.no_kk || '-'} </medium><br>
+                                <medium><b>Alamat:</b> ${resident.alamat || '-'}</medium><br>
+                                <medium><b>Kecamatan:</b> ${resident.kecamatan || '-'}</medium><br>
+                                <medium><b>Pendapatan:</b> ${resident.pendapatan || '-'}</medium><br>
+                                <a href="/residents/${resident.id}" class="btn btn-sm btn-primary mt-2 text-light">
+                                    <i class="fas fa-eye"></i> Detail
+                                </a>
+                            </div>
+                        `);
 
                     markerLayer.addLayer(marker);
                 }
             });
         }
-
 
         // --- Render Heatmap ---
         function renderHeatmap(residents) {
@@ -151,34 +153,36 @@
             loadResidents();
         });
 
-        document.getElementById("filterKecamatan").addEventListener("change", function () {
-            currentKecamatan = this.value;
-            currentKK = null;
-            loadResidents();
+        // Hanya aktifkan filter kecamatan jika ada (role admin)
+        if (document.getElementById("filterKecamatan")) {
+            document.getElementById("filterKecamatan").addEventListener("change", function () {
+                currentKecamatan = this.value;
+                currentKK = null;
+                loadResidents();
 
-            // Reset highlight polygon
-            Object.values(kecamatanLayers).forEach(layer => {
-                layer.setStyle({
-                    color: "black",
-                    weight: 1,
-                    fillColor: "violet",
-                    fillOpacity: 0.2
-                });
-            });
-
-            if (currentKecamatan !== "all") {
-                let selectedLayer = kecamatanLayers[currentKecamatan];
-                if (selectedLayer) {
-                    selectedLayer.setStyle({
-                        color: "red",
-                        weight: 3,
-                        fillColor: "purple",
-                        fillOpacity: 0.4
+                Object.values(kecamatanLayers).forEach(layer => {
+                    layer.setStyle({
+                        color: "black",
+                        weight: 1,
+                        fillColor: "violet",
+                        fillOpacity: 0.2
                     });
-                    map.fitBounds(selectedLayer.getBounds());
+                });
+
+                if (currentKecamatan !== "all") {
+                    let selectedLayer = kecamatanLayers[currentKecamatan];
+                    if (selectedLayer) {
+                        selectedLayer.setStyle({
+                            color: "red",
+                            weight: 3,
+                            fillColor: "purple",
+                            fillOpacity: 0.4
+                        });
+                        map.fitBounds(selectedLayer.getBounds());
+                    }
                 }
-            }
-        });
+            });
+        }
 
         // Search KK
         document.getElementById("btnSearchKK").addEventListener("click", function () {
@@ -228,17 +232,17 @@
             categories.forEach(cat => {
                 div.innerHTML +=
                     `<i style="background:${cat.color}; width:10px; height:10px; display:inline-block; margin-right:8px; border:1px solid #000;"></i>
-                     <span style="font-weight:500;">${cat.label}</span><br>`;
+                         <span style="font-weight:500;">${cat.label}</span><br>`;
             });
             return div;
         };
         legend.addTo(map);
 
-
         // --- Load GeoJSON Kecamatan ---
         fetch("{{ asset('geojson/kecamatan.geojson') }}")
             .then(res => res.json())
             .then(geojson => {
+                // Isi dropdown kecamatan hanya kalau admin
                 let dropdown = document.getElementById("filterKecamatan");
                 let kecamatanSet = new Set();
 
@@ -247,12 +251,14 @@
                     kecamatanSet.add(namaKecamatan);
                 });
 
-                Array.from(kecamatanSet).sort().forEach(namaKecamatan => {
-                    let opt = document.createElement("option");
-                    opt.value = namaKecamatan;
-                    opt.textContent = namaKecamatan;
-                    dropdown.appendChild(opt);
-                });
+                if (dropdown) {
+                    Array.from(kecamatanSet).sort().forEach(namaKecamatan => {
+                        let opt = document.createElement("option");
+                        opt.value = namaKecamatan;
+                        opt.textContent = namaKecamatan;
+                        dropdown.appendChild(opt);
+                    });
+                }
 
                 var geoLayer = L.geoJSON(geojson, {
                     style: {
@@ -267,28 +273,31 @@
                             layer.bindPopup(`<b>${namaKecamatan}</b>`);
                             kecamatanLayers[namaKecamatan] = layer;
 
-                            layer.on("click", function () {
-                                document.getElementById("filterKecamatan").value = namaKecamatan;
-                                currentKecamatan = namaKecamatan;
-                                loadResidents();
+                            // Klik kecamatan hanya kalau admin
+                            if (dropdown) {
+                                layer.on("click", function () {
+                                    dropdown.value = namaKecamatan;
+                                    currentKecamatan = namaKecamatan;
+                                    loadResidents();
 
-                                Object.values(kecamatanLayers).forEach(l => {
-                                    l.setStyle({
-                                        color: "black",
-                                        weight: 1,
-                                        fillColor: "violet",
-                                        fillOpacity: 0.2
+                                    Object.values(kecamatanLayers).forEach(l => {
+                                        l.setStyle({
+                                            color: "black",
+                                            weight: 1,
+                                            fillColor: "violet",
+                                            fillOpacity: 0.2
+                                        });
                                     });
-                                });
 
-                                layer.setStyle({
-                                    color: "red",
-                                    weight: 3,
-                                    fillColor: "purple",
-                                    fillOpacity: 0.4
+                                    layer.setStyle({
+                                        color: "red",
+                                        weight: 3,
+                                        fillColor: "purple",
+                                        fillOpacity: 0.4
+                                    });
+                                    map.fitBounds(layer.getBounds());
                                 });
-                                map.fitBounds(layer.getBounds());
-                            });
+                            }
                         }
                     }
                 }).addTo(map);
@@ -327,6 +336,5 @@
 
             window.location.href = url;
         });
-
     </script>
 @endsection
