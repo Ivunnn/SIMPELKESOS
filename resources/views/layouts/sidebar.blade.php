@@ -28,7 +28,7 @@
     </li>
 
     <li class="nav-item {{ request()->is('map*') ? 'active' : '' }}">
-        <a class="nav-link" href="/map">
+        <a class="nav-link" href="{{ route('map.index') }}">
             <i class="fas fa-fw fa-map"></i>
             <span>Peta</span>
         </a>
@@ -41,14 +41,14 @@
         </a>
     </li>
 
-@if(Auth::check() && Auth::user()->role === 'admin')
-    <li class="nav-item {{ request()->is('users*') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('users.index') }}">
-            <i class="fas fa-fw fa-user"></i>
-            <span>Manajemen Pengguna</span>
-        </a>
-    </li>
-@endif
+    @if(Auth::check() && Auth::user()->role === 'admin')
+        <li class="nav-item {{ request()->is('users*') ? 'active' : '' }}">
+            <a class="nav-link" href="{{ route('users.index') }}">
+                <i class="fas fa-fw fa-user"></i>
+                <span>Manajemen Pengguna</span>
+            </a>
+        </li>
+    @endif
 
 
     <!-- Sidebar Toggler -->

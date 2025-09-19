@@ -25,7 +25,7 @@
         <label>Role</label>
         <select name="role" class="form-control" required id="role-select">
             <option value="admin">Admin</option>
-            <option value="kecamatan">Kecamatan</option>
+            <option value="pendamping">Pendamping</option>
         </select>
     </div>
     <div class="mb-3" id="kecamatan-field" style="display:none;">
@@ -45,7 +45,7 @@ document.getElementById('role-select').addEventListener('change', function() {
 
 document.getElementById('role-select').addEventListener('change', function() {
     let field = document.getElementById('kecamatan-field');
-    if (this.value === 'kecamatan') {
+    if (this.value === 'pendamping') {
         field.style.display = 'block';
 
         // Fetch daftar kecamatan dari backend

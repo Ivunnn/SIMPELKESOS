@@ -38,7 +38,11 @@
                                 <th>Nama Kepala Keluarga</th>
                                 <td>{{ $resident->nama_kepala_keluarga }}</td>
                             </tr>
-                             <tr>
+                            <tr>
+                                <th>Bantuan Sosial</th>
+                                <td>{{ $resident->bansos ?? '-' }}</td>
+                            </tr>
+                            <tr>
                                 <th>Lokasi Peta</th>
                                 <td>
                                     {{-- INI BAGIAN YANG DIPERBARUI --}}
@@ -60,7 +64,7 @@
                                 <th>Kepemilikan Usaha</th>
                                 <td>{{ $resident->usaha ?? '-' }}</td>
                             </tr>
-                             <tr>
+                            <tr>
                                 <th>Pendapatan / Bulan</th>
                                 <td>{{ $resident->pendapatan }}</td>
                             </tr>
@@ -72,7 +76,7 @@
                     </div>
 
                     <h6 class="mt-4 font-weight-bold text-primary">Detail Aset & Kondisi Rumah</h6>
-                     <div class="table-responsive">
+                    <div class="table-responsive">
                         <table class="table table-bordered table-sm" style="font-size: 0.9rem;">
                             <tr><th width="35%">Status Kepemilikan Rumah</th><td>{{ $resident->status_kepemilikan_rumah }}</td></tr>
                             <tr><th>Jenis Lantai</th><td>{{ $resident->jenis_lantai }}</td></tr>
@@ -80,9 +84,9 @@
                             <tr><th>Jenis Atap</th><td>{{ $resident->jenis_atap }}</td></tr>
                             <tr><th>Sumber Air Minum</th><td>{{ $resident->sumber_air_minum }}</td></tr>
                             <tr><th>Daya Listrik</th><td>{{ $resident->daya_listrik }}</td></tr>
-                             <tr><th>Bahan Bakar Memasak</th><td>{{ $resident->bahan_bakar_memasak }}</td></tr>
-                             <tr><th>Fasilitas BAB</th><td>{{ $resident->fasilitas_bab }}</td></tr>
-                             <tr><th>Asset Bergerak</th><td>{{ $resident->asset_bergerak ?? '-' }}</td></tr>
+                            <tr><th>Bahan Bakar Memasak</th><td>{{ $resident->bahan_bakar_memasak }}</td></tr>
+                            <tr><th>Fasilitas BAB</th><td>{{ $resident->fasilitas_bab }}</td></tr>
+                            <tr><th>Asset Bergerak</th><td>{{ $resident->asset_bergerak ?? '-' }}</td></tr>
                             <tr><th>Asset Tidak Bergerak</th><td>{{ $resident->asset_tidak_bergerak ?? '-' }}</td></tr>
                             <tr><th>Hewan Ternak</th><td>{{ $resident->ternak ?? '-' }}</td></tr>
                         </table>
@@ -93,9 +97,9 @@
 
         <!-- Kolom Kanan: Foto & Anggota Keluarga -->
         <div class="col-lg-5 mb-4">
-             <!-- Foto-foto -->
+            <!-- Foto-foto -->
             <div class="card shadow-sm mb-4">
-                 <div class="card-header py-3">
+                <div class="card-header py-3">
                     <h6 class="m-0 font-weight-bold text-primary">Dokumentasi Foto</h6>
                 </div>
                 <div class="card-body">
@@ -110,15 +114,15 @@
                         </div>
                         <div class="col-4">
                             <h6 class="small fw-bold">Dalam Rumah</h6>
-                             @if($resident->foto_tampak_dalam)
+                            @if($resident->foto_tampak_dalam)
                                 <img src="{{ asset('storage/' . $resident->foto_tampak_dalam) }}" alt="Foto Dalam" class="img-fluid rounded shadow-sm">
                             @else
                                 <span class="text-muted small">Tidak ada</span>
                             @endif
                         </div>
                         <div class="col-4">
-                             <h6 class="small fw-bold">Kamar Mandi</h6>
-                             @if($resident->foto_kamar_mandi)
+                            <h6 class="small fw-bold">Kamar Mandi</h6>
+                            @if($resident->foto_kamar_mandi)
                                 <img src="{{ asset('storage/' . $resident->foto_kamar_mandi) }}" alt="Foto Kamar Mandi" class="img-fluid rounded shadow-sm">
                             @else
                                 <span class="text-muted small">Tidak ada</span>

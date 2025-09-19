@@ -21,14 +21,21 @@ class MapController extends Controller
     {
         $query = Residents::query();
 
+        // 🔑 Batasi berdasarkan role user
+        if (auth()->user()->role === 'pendamping') {
+            $query->where('kecamatan', auth()->user()->kecamatan);
+        }
+
         // Filter berdasarkan no_kk
         if ($request->has('no_kk') && $request->no_kk !== null) {
             $query->where('no_kk', $request->no_kk);
         }
 
-        // Filter kecamatan
+        // Filter kecamatan → hanya untuk admin
         if ($request->has('kecamatan') && $request->kecamatan !== 'all') {
-            $query->where('kecamatan', $request->kecamatan);
+            if (auth()->user()->role === 'admin') {
+                $query->where('kecamatan', $request->kecamatan);
+            }
         }
 
         // Filter pendapatan
@@ -54,39 +61,52 @@ class MapController extends Controller
             ->sort()
             ->values();
 
+        // 🔑 Jika role kecamatan, hanya kembalikan kecamatan miliknya
+        if (auth()->user()->role === 'kecamatan') {
+            $kecamatanList = collect([auth()->user()->kecamatan]);
+        }
+
         return response()->json($kecamatanList);
     }
 
-      public function exportExcel(Request $request)
-{
-    return Excel::download(new ResidentsExport(
-        $request->kecamatan,
-        $request->pendapatan,
-        $request->no_kk
-    ), 'residents.xlsx');
-}
+    public function exportExcel(Request $request)
+    {
+        // 🔑 Batasi data role kecamatan
+        $kecamatan = $request->kecamatan;
+        if (auth()->user()->role === 'kecamatan') {
+            $kecamatan = auth()->user()->kecamatan;
+        }
 
-public function exportPdf(Request $request)
-{
-    $query = Residents::query();
-
-    if ($request->kecamatan && $request->kecamatan !== 'all') {
-        $query->where('kecamatan', $request->kecamatan);
+        return Excel::download(
+            new ResidentsExport($kecamatan, $request->pendapatan, $request->no_kk),
+            'residents.xlsx'
+        );
     }
 
-    if ($request->pendapatan && $request->pendapatan !== 'all') {
-        $query->where('pendapatan', $request->pendapatan);
+    public function exportPdf(Request $request)
+    {
+        $query = Residents::query();
+
+        // 🔑 Batasi data role kecamatan
+        if (auth()->user()->role === 'kecamatan') {
+            $query->where('kecamatan', auth()->user()->kecamatan);
+        } else {
+            if ($request->kecamatan && $request->kecamatan !== 'all') {
+                $query->where('kecamatan', $request->kecamatan);
+            }
+        }
+
+        if ($request->pendapatan && $request->pendapatan !== 'all') {
+            $query->where('pendapatan', $request->pendapatan);
+        }
+
+        if ($request->no_kk) {
+            $query->where('no_kk', $request->no_kk);
+        }
+
+        $residents = $query->get();
+
+        $pdf = Pdf::loadView('exports.residents_pdf', compact('residents'));
+        return $pdf->download('residents.pdf');
     }
-
-    if ($request->no_kk) {
-        $query->where('no_kk', $request->no_kk);
-    }
-
-    $residents = $query->get();
-
-    $pdf = PDF::loadView('exports.residents_pdf', compact('residents'));
-    return $pdf->download('residents.pdf');
-}
-
-
 }

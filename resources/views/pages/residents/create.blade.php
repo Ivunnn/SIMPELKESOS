@@ -44,14 +44,14 @@
 
                         <div class="form-group mb-3">
                             <label for="kelurahan">Kelurahan/Desa</label>
-                            <input type="text" class="form-control" id="kelurahan" name="kelurahan" value="{{ old('kelurahan') }}"
-                                required>
+                            <input type="text" class="form-control" id="kelurahan" name="kelurahan"
+                                value="{{ old('kelurahan') }}" required>
                         </div>
 
                         <div class="form-group mb-3">
                             <label for="kecamatan">Kecamatan</label>
-                            <input type="text" class="form-control" id="kecamatan" name="kecamatan" value="{{ old('kecamatan') }}"
-                                required>
+                            <input type="text" class="form-control" id="kecamatan" name="kecamatan"
+                                value="{{ old('kecamatan') }}" required>
                         </div>
 
                         <div class="form-group mb-3">
@@ -214,12 +214,29 @@
                         </div>
 
                         <div class="form-group mb-3">
+                            <label for="bansos">Bantuan Sosial yang diterima</label>
+                            <select class="form-control" id="bansosSelect" name="bansos">
+                                <option value="PKH" {{ old('bansos') == 'PKH' ? 'selected' : '' }}>PKH</option>
+                                <option value="Sembako" {{ old('bansos') == 'Sembako' ? 'selected' : '' }}>Sembako</option>
+                                <option value=" PBI-JK" {{ old('bansos') == 'PBI-JK' ? 'selected' : '' }}>PBI-JK</option>
+                                <option value="YAPI" {{ old('bansos') == 'YAPI' ? 'selected' : '' }}>YAPI</option>
+                                <option value="Lain - Lain" {{ old('bansos') == 'Lain - Lain' ? 'selected' : '' }}>Lain - Lain
+                                </option>
+                            </select>
+                        </div>
+
+                        <div class=" mb-3" id="bansos-field" style="display:none;">
+                            <label for="bansos_lain">Bantuan Sosial (Lain - Lain)</label>
+                            <input type="text" class="form-control" id="bansos_lain" name="bansos_lain"
+                                value="{{ old('bansos_lain') }}">
+                        </div>
+
+
+                        <div class="form-group mb-3">
                             <label for="latitude">Latitude</label>
                             <input type="text" class="form-control" id="latitude" name="latitude"
                                 value="{{ old('latitude') }}">
                         </div>
-
-
 
                         <div class="form-group mb-3">
                             <label for="longitude">Longitude</label>
@@ -238,4 +255,32 @@
             </form>
         </div>
     </div>
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const bansosSelect = document.getElementById("bansosSelect");
+            const bansosField = document.getElementById("bansos-field");
+            const bansosInput = document.getElementById("bansos_lain");
+
+            function toggleBansosField() {
+                if (bansosSelect.value === "Lain - Lain") {
+                    bansosField.style.display = "block";
+                    bansosInput.required = true;
+                } else {
+                    bansosField.style.display = "none";
+                    bansosInput.value = "";
+                    bansosInput.required = false;
+                }
+            }
+
+            // Jalan saat halaman pertama kali load
+            toggleBansosField();
+
+            // Jalan saat select berubah
+            bansosSelect.addEventListener("change", toggleBansosField);
+        });
+    </script>
+
+
 @endsection

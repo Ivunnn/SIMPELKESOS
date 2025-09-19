@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('password');
             
             // tambahan untuk kebutuhan role & kecamatan
-            $table->enum('role', ['admin', 'kecamatan'])->default('kecamatan');
+            $table->enum('role', ['admin', 'pendamping'])->default('pendamping');
             $table->string('kecamatan')->nullable(); // filter data per kecamatan
 
             $table->rememberToken();

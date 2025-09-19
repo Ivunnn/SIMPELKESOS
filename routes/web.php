@@ -40,17 +40,17 @@ Route::middleware('auth')->group(function () {
     Route::resource('residents', ResidentsController::class);
 
     // Map
-    Route::get('/map', [MapController::class, 'index'])->name('map.index');
-    Route::get('/map/residents', [MapController::class, 'getResidents'])->name('map.residents');
-    Route::get('/map/kecamatan', [MapController::class, 'getKecamatan'])->name('map.kecamatan');
-    Route::get('/api/residents', [MapController::class, 'getResidents'])->name('map.residents');
-    Route::get('/map/export/excel', [MapController::class, 'exportExcel'])->name('map.export.excel');
-    Route::get('/map/export/pdf', [MapController::class, 'exportPdf'])->name('map.export.pdf');
-
+        Route::get('/map', [MapController::class, 'index'])->name('map.index');
+        Route::get('/map/residents', [MapController::class, 'getResidents'])->name('map.residents');
+        Route::get('/map/kecamatan', [MapController::class, 'getKecamatan'])->name('map.kecamatan');
+        Route::get('/api/residents', [MapController::class, 'getResidents'])->name('map.residents');
+        Route::get('/map/export/excel', [MapController::class, 'exportExcel'])->name('map.export.excel');
+        Route::get('/map/export/pdf', [MapController::class, 'exportPdf'])->name('map.export.pdf');
+    
     // Nested route untuk anggota keluarga
     Route::post('residents/{resident}/family-members', [FamilyMemberController::class, 'store'])->name('family-members.store');
     Route::delete('residents/{resident}/family-members/{familyMember}', [FamilyMemberController::class, 'destroy'])->name('family-members.destroy');
-
+    
     // Hanya admin yang boleh akses manajemen user
     Route::middleware('admin')->group(function () {
         Route::resource('users', UserController::class);

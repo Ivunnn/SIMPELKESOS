@@ -26,7 +26,7 @@
         <label>Role</label>
         <select name="role" class="form-control" id="role-select">
             <option value="admin" {{ $user->role === 'admin' ? 'selected' : '' }}>Admin</option>
-            <option value="kecamatan" {{ $user->role === 'kecamatan' ? 'selected' : '' }}>Kecamatan</option>
+            <option value="pendamping" {{ $user->role === 'pendamping' ? 'selected' : '' }}>Pendamping</option>
         </select>
     </div>
     <div class="mb-3" id="kecamatan-field" style="{{ $user->role === 'kecamatan' ? '' : 'display:none;' }}">

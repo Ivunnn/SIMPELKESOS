@@ -38,6 +38,7 @@ class Residents extends Model
     'foto_kamar_mandi',
     'latitude',
     'longitude',
+    'bansos',
 ];
 
 

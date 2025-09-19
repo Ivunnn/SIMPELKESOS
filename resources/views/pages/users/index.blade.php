@@ -32,7 +32,7 @@
                         <td>{{ $user->name }}</td>
                         <td>{{ $user->email }}</td>
                         <td>
-                            <span class="badge bg-{{ $user->role === 'admin' ? 'success' : 'info' }}">
+                            <span class="text-white badge bg-{{ $user->role === 'admin' ? 'success' : 'info' }}">
                                 {{ ucfirst($user->role) }}
                             </span>
                         </td>

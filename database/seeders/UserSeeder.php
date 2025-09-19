@@ -27,7 +27,7 @@ class UserSeeder extends Seeder
             [
                 'name' => 'Petugas Kecamatan Jatirejo',
                 'password' => Hash::make('password123'),
-                'role' => 'kecamatan',
+                'role' => 'pendamping',
                 'kecamatan' => 'Jatirejo',
             ]
         );
@@ -37,7 +37,7 @@ class UserSeeder extends Seeder
             [
                 'name' => 'Petugas Kecamatan Mojosari',
                 'password' => Hash::make('password123'),
-                'role' => 'kecamatan',
+                'role' => 'pendamping',
                 'kecamatan' => 'Mojosari',
             ]
         );

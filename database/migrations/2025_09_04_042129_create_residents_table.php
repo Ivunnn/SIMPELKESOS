@@ -40,6 +40,8 @@ return new class extends Migration {
     $table->string('foto_rumah')->nullable();
     $table->string('foto_tampak_dalam')->nullable();
     $table->string('foto_kamar_mandi')->nullable();
+    $table->string('bansos')->nullable();
+    
 
     // Koordinat rumah
     $table->decimal('longitude', 11, 8)->nullable();
